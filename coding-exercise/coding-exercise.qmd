@@ -3,3 +3,113 @@ title: "R Coding Exercise"
 ---
 
 Placeholder file for the future R coding exercise.
+
+Download and load the Dslabs package
+```{r}
+library(dslabs)
+library(renv)
+help(gapminder)
+```
+
+```{r}
+#get an overview of data structure
+str(gapminder)
+#get a summary of data
+summary(gapminder)
+```
+
+```{r}
+#determine the type of object gapminder is
+class(gapminder)
+```
+# Essentially, I filtered the dslabs data to process and look at subsets of the data. When looking at the contenient of Africa, I created the africadata variable to concentrate the data to that continent.  
+```{r}
+# Filter only African countries
+africadata <- subset(gapminder, continent == "Africa")
+#get an overview of data structure
+str(africadata)
+#get a summary of data
+summary(africadata)
+```
+#I looked at three variables - life expectancy, infant mortality and population size - and processed that data by plotting the latter to variables through the two objects, infantLife and popLife.
+```{r}
+# Create a new object with infant_mortality and life_expectancy
+infantLife <- africadata[, c("infant_mortality", "life_expectancy")]
+# Create a new object with population and life_expectancy
+popLife <- africadata[, c("population", "life_expectancy")]
+```
+
+```{r}
+#get an overview of data structure for the two new objects
+str(africadata)
+#get a summary of data for infantLife and popLife
+summary(africadata)
+```
+
+```{r}
+# Assuming you have created the infantLife and popLife variables
+# Plot life expectancy as a function of infant mortality
+plot(infantLife$infant_mortality, infantLife$life_expectancy,
+     main = "Life Expectancy vs Infant Mortality",
+     xlab = "Infant Mortality",
+     ylab = "Life Expectancy",
+     pch = 16)  # Set the point type to a solid circle
+# Add grid lines
+grid()
+# Plot life expectancy as a function of population size (log scale)
+plot(log10(popLife$population), popLife$life_expectancy,
+     main = "Life Expectancy vs Population Size (log scale)",
+     xlab = "Log Population",
+     ylab = "Life Expectancy",
+     pch = 16)  # Set the point type to a solid circle
+# Add grid lines
+grid()
+```
+# The diffeerent streaks within the plots are due to a change in the years for which the data as collected for each country. The creates as trend the across the plot indicating a relationship in the data points for the specific streaks
+
+```{r}
+# Find years with missing data for infant mortality
+years_with_na <- unique(africadata[is.na(africadata$infant_mortality), "year"])
+
+# Identify years to exclude (up to 1981 and for 2016)
+years_to_exclude <- c(1970:1981, 2016)
+
+# Choose the year 2000 and exclude other years
+selected_year <- 2000
+filtered_africadata <- africadata[africadata$year == selected_year & !(africadata$year %in% years_to_exclude), ]
+
+# Check the dimensions of the filtered data
+dim(filtered_africadata)
+```
+#I focused on the year 2000 to remove this effect for processing and then plotted the data. Finally, I looked at the simple regression model to assess the relationship of the variables within the two objects.
+```{r}
+# Plot life expectancy as a function of infant mortality for the year 2000
+plot(filtered_africadata$infant_mortality, filtered_africadata$life_expectancy,
+     main = "Life Expectancy vs Infant Mortality (Year 2000)",
+     xlab = "Infant Mortality",
+     ylab = "Life Expectancy",
+     pch = 16)  # Set the point type to a solid circle
+# Add grid lines
+grid()
+# Plot life expectancy as a function of population size (log scale) for the year 2000
+plot(log10(filtered_africadata$population), filtered_africadata$life_expectancy,
+     main = "Life Expectancy vs Population Size (Year 2000, log scale)",
+     xlab = "Log Population",
+     ylab = "Life Expectancy",
+     pch = 16)  # Set the point type to a solid circle
+# Add grid lines
+grid()
+```
+
+```{r}
+# Fit linear regression with life expectancy as the outcome and infant mortality as the predictor
+fit1 <- lm(life_expectancy ~ infant_mortality, data = filtered_africadata)
+# Fit linear regression with life expectancy as the outcome and population size (log scale) as the predictor
+fit2 <- lm(life_expectancy ~ log10(population), data = filtered_africadata)
+# Print summary for fit1
+summary(fit1)
+# Print summary for fit2
+summary(fit2)
+```
+#For fit1(infantLife in 2000), the pvalue is low indicating that the weak negative correlation is significant and we can reject the null hypothesis that the correllation is equal to 0. 
+#For fit2(popLife in 2000), the pvalue is greater than .05 indicating that we cannot reject the null hypothesis that there is no linear relationship between logPopulation and life expectancy. 
