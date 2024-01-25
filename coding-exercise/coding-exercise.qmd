@@ -113,3 +113,119 @@ summary(fit2)
 ```
 #For fit1(infantLife in 2000), the pvalue is low indicating that the weak negative correlation is significant and we can reject the null hypothesis that the correllation is equal to 0. 
 #For fit2(popLife in 2000), the pvalue is greater than .05 indicating that we cannot reject the null hypothesis that there is no linear relationship between logPopulation and life expectancy. 
+
+
+**This section is contributed by Malika Dhakhwa**
+
+This part of the exercise examines gun murders in the United States in 2010, using the ‘murders’ dataset found in R's 'dslabs' package. The analysis leverages the comprehensive capabilities of the 'tidyverse' package for data manipulation, visualization and analysis. 
+
+R's help function provides insightful guidance on various datasets, including 'murders'. For instance, executing 'help(murders)' in R prompts to detailed information about this dataset.
+
+```{r}
+#load dslabs package
+library("dslabs")
+#look at help file for NYC Regents exams scores 2010 data
+help(murders)
+#load tidyverse package
+library(tidyverse)
+
+```
+
+As exhibited in the help window, the 'murders' dataset contains columns of the US state and their abbreviation, Geographical US region, State population of 2010 and Number of gun murders by states in 2010. A detailed breakdown of the Variable Names and Variable are listed below.
+
+Variable Name   Variable
+state           US state
+abb             Abbreviation of US state
+region          Geographical US region
+population      State population (2010)
+total           Number of gun murders in state (2010)
+
+
+The str function pulls the structure of the actual data. As we can see below, the 'murders' data has 51 observations and 5 variables. There are two numerical variables, state population in 2010 and number of gun murders in the state in 2010; two character variables state and abb and one factor variable, region.
+
+```{r}
+#get an overview of data structure
+str(murders)
+
+```
+The summary(murders) provides statistical overview. For numerical columns, it presents minimum, maximum, mean, median, quartiles and missing values. For categorical or factor columns, it provides a count of the number of occurrences for each level. For example, there are 9 observations for Northeast region, 17 for the South, 12 for the North Central and 13 for the West region. No missing values are observed.
+
+```{r}
+#get a summary of data
+summary(murders)
+
+```
+It is important to find out the class or type of an object in R before applying any functions and operations. Determining the object's class with 'class(murders)' confirms that 'murders' is a 'data.frame', indicative of its tabular structure in R.
+
+```{r}
+#determine the type of object murders is
+class(murders)
+```
+To visualize the data distribution, a few plots are created. 
+Population have larger values, some in millions. For the purpose of better model fitting, the population is converted into 'thousands' number by dividing it by 1000n
+```{r}
+#population in thousands
+murders <- murders %>%
+  mutate(pop_thousands= population / 1000)
+```
+
+A scatter plot of total murder by states is plotted against state population which revealed a positive correlation between the number of gun murders and population in the states in 2010. 
+
+```{r message=FALSE, warning=FALSE}
+#Plotting number of gun murders in state as a function of state population
+p1 <- murders %>% ggplot(aes(x=pop_thousands, y=total)) + geom_point() + geom_smooth(method='lm')+
+        ggtitle("Figure 1: Gun Murders in the States by Population")+
+          theme(plot.title = element_text(hjust = 0.5)) +  
+            xlab("Population in 'Thousands'") +
+              ylab("Total Gun Murders")
+plot(p1)
+
+```
+
+Second, box plot is created to compare the distribution of total gun murders by state across four different geographical regions.It suggests that the South region has the highest median indicating more states in this region had higher murder rates in 2010 compared to other regions. It is followed by Northeast, North Central, and the West regions. The North Central region has larger inter-quartile range, suggesting a larger variation in the number of gun murders by state in 2010 compared to other regions The outliers on the plots of South and West regions indicate that few states in these two regions had exceptionally higher murder counts in 2010.  
+
+```{r}
+#Plotting number of gun murders in US Geographical regions
+p2 <- murders %>% ggplot(aes(x=region, y=total)) + geom_boxplot()+
+       ggtitle("Figure 2: Gun Murders by Geographical Regions")+
+          theme(plot.title = element_text(hjust = 0.5)) +  
+            xlab("Regions") +
+              ylab("Total Gun Murders")
+plot(p2)
+
+```
+Next, box plot is created to compare the distribution of state populations across the four geographical regions.It revealed the North Central region has the highest median indicating more states in this region had larger population in 2010 compared to other regions. It is followed by South, North East, and the West. The Northeast region has larger inter-quartile ranges, indicating a larger variation in population by state in 2010 compared to other regions. The box plots also suggest that one state in the West and two in the South are exceptionally highly populated.  
+
+```{r}
+#Plotting number of gun murders in Geographical US region
+p3 <- murders %>% ggplot(aes(x=region, y= pop_thousands)) + geom_boxplot()+
+        ggtitle("Figure 3: Population by Geographical Regions")+
+          theme(plot.title = element_text(hjust = 0.5)) +  
+            xlab("Regions") +
+              ylab("Population in 'Thousands'") 
+plot(p3)
+
+```
+While the scatter plot suggested a positive correlation between state population and the number of gun murders, the box plots do not provide clear evidence to support this trend. 
+
+Further examination is performed fitting a linear model with number of gun murders in 2010 as outcome and Geographical US region (a factor) and State population measured in thousands as predictors.
+
+Based on the extremely small p-value, population is a significant predictor of gun murders in the US states in 2010. On average, for each addition of one thousand in the population, the number of gun murders increased by 0.03. The South region is also significant at 5% level. Its coefficient  suggests that, holding population constant, the South region, on an average, had 61.913 more gun murders than the Northeast region in 2010.    
+
+```{r}
+fit1 <- lm(total ~ population + region, murders)  
+
+```
+
+```{r}
+#Printing the results of the linear model fit1
+summary(fit1)
+```
+
+
+
+
+
+
+
+
