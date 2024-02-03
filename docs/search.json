@@ -327,5 +327,40 @@
     "title": "Synthetic Data Exercise",
     "section": "Multiple Logistic Regression Model for Heart Attack with Multiple Predictors:",
     "text": "Multiple Logistic Regression Model for Heart Attack with Multiple Predictors:\nAmong the predictors, Drug_Concentration has a significant negative effect on the log-odds of a heart attack (Estimate: -0.100; p &lt; 2e-16), suggesting that higher drug concentrations are associated with a lower risk of a heart attack. Other predictors (Dose, Age, Treatment_Group, Cholesterol_Level, CRP_Level) do not have significant effects on the log-odds."
+  },
+  {
+    "objectID": "syntheticdata-exercise/syntheticdata-exercise.html",
+    "href": "syntheticdata-exercise/syntheticdata-exercise.html",
+    "title": "Synthetic Data Exercise",
+    "section": "",
+    "text": "For this exercise, I will be conducting an analysis of synthetic data that I have created by referencing existing data. I have a great interest in studying lifestyle factors that contribute to heart disease, so I have based this exercise on:\nShufelt, C. L., et al. (2020). \"Biometric and Psychometric Remote Monitoring and Cardiovascular Risk Biomarkers in Ischemic Heart Disease.\" Journal of the American Heart Association 9(18): e016023.\nI utilized AI to create the coding for this project while also making additional edits to suit my needs."
+  },
+  {
+    "objectID": "syntheticdata-exercise/syntheticdata-exercise.html#linear-regression-model-for-cholesterol-level-vs-dose",
+    "href": "syntheticdata-exercise/syntheticdata-exercise.html#linear-regression-model-for-cholesterol-level-vs-dose",
+    "title": "Synthetic Data Exercise",
+    "section": "Linear Regression Model for Cholesterol Level vs Dose:",
+    "text": "Linear Regression Model for Cholesterol Level vs Dose:\nThe intercept is 165.39, and the coefficient for the Dose variable is -0.1374. This suggests that for every unit increase in Dose, the Cholesterol Level decreases by 0.1374 units. Both the intercept and Dose coefficient are highly significant (p &lt; 2e-16), indicating a strong relationship between Dose and Cholesterol Level."
+  },
+  {
+    "objectID": "syntheticdata-exercise/syntheticdata-exercise.html#linear-regression-model-for-crp-level-vs-dose",
+    "href": "syntheticdata-exercise/syntheticdata-exercise.html#linear-regression-model-for-crp-level-vs-dose",
+    "title": "Synthetic Data Exercise",
+    "section": "Linear Regression Model for CRP Level vs Dose:",
+    "text": "Linear Regression Model for CRP Level vs Dose:\nThe intercept is 1.2971, and the coefficient for the Dose variable is 1.0630. This suggests that for every unit increase in Dose, the CRP Level increases by 1.0630 units. Both the intercept and Dose coefficient are highly significant (p &lt; 2e-16), indicating a strong relationship between Dose and CRP Level."
+  },
+  {
+    "objectID": "syntheticdata-exercise/syntheticdata-exercise.html#logistic-regression-model-for-heart-attack-vs-dose",
+    "href": "syntheticdata-exercise/syntheticdata-exercise.html#logistic-regression-model-for-heart-attack-vs-dose",
+    "title": "Synthetic Data Exercise",
+    "section": "Logistic Regression Model for Heart Attack vs Dose:",
+    "text": "Logistic Regression Model for Heart Attack vs Dose:\nThe Dose coefficient is not statistically significant (p = 0.245), indicating that there is no significant relationship between Dose and the likelihood of a heart attack."
+  },
+  {
+    "objectID": "syntheticdata-exercise/syntheticdata-exercise.html#multiple-logistic-regression-model-for-heart-attack-with-multiple-predictors",
+    "href": "syntheticdata-exercise/syntheticdata-exercise.html#multiple-logistic-regression-model-for-heart-attack-with-multiple-predictors",
+    "title": "Synthetic Data Exercise",
+    "section": "Multiple Logistic Regression Model for Heart Attack with Multiple Predictors:",
+    "text": "Multiple Logistic Regression Model for Heart Attack with Multiple Predictors:\nAmong the predictors, Drug_Concentration has a significant negative effect on the log-odds of a heart attack (Estimate: -0.100; p &lt; 2e-16), suggesting that higher drug concentrations are associated with a lower risk of a heart attack. Other predictors (Dose, Age, Treatment_Group, Cholesterol_Level, CRP_Level) do not have significant effects on the log-odds."
   }
 ]

@@ -19,7 +19,7 @@ website:
           - text: "TidyTuesday Exercise"
             file: tidytuesday-exercise/tidytuesday-exercise.qmd
           - text: "Synthetic Data Exercise"
-            file: SyntheticDataExercise/SyntheticDATAExercise.qmd
+            file: syntheticdata-exercise/syntheticdata-exercise.qmd
 
     right:
       - icon: github 
