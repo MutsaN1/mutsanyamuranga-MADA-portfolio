@@ -16,8 +16,11 @@ website:
             file: coding-exercise/coding-exercise.qmd
           - text: "Presentation Exercise"
             file: presentation-exercise/presentation-exercise.qmd
-          - text: "Tidy Tuesday Exercise"
+          - text: "TidyTuesday Exercise"
             file: tidytuesday-exercise/tidytuesday-exercise.qmd
+          - text: "Synthetic Data Exercise"
+            file: SyntheticDataExercise/SyntheticDATAExercise.qmd
+
     right:
       - icon: github 
         href: https://github.com/MutsaN1/mutsanyamuranga-MADA-portfolio.git        
