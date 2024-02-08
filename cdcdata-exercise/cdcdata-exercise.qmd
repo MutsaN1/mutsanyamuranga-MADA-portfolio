@@ -1,0 +1,133 @@
+---
+title: "Data Analysis Exercise"
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+
+When I first downloaded my data in, the size of the file was 33 MB large. R was unable to load the file so I decided to import the data. After importing the data, I wrote the code beloww to reduce the size of the to 1000 observations. I created the reduced set name (reduced_data) and cleaned the data with the following code. 
+
+#This chunk only works in the R terminal as I cannot figure out how it will work within the qmd file. 
+```{r}
+library(readr)
+library(dplyr)
+
+original_data <- read_csv("Nutrition__Physical_Activity__and_Obesity_-_Behavioral_Risk_Factor_Surveillance_System_20240207.csv")
+
+# Define the desired number of rows to include in the reduced dataset
+desired_rows <- 1000  # Adjust this number as needed
+
+# Select a random subset of rows
+reduced_data <- original_data %>% 
+  sample_n(desired_rows)
+
+# Write the reduced dataset to a new CSV file
+write_csv(reduced_data, "Nutrition__Physical_Activity__and_Obesity_-_Behavioral_Risk_Factor_Surveillance_System_20240207.csv")
+
+# Retrieve the full column specification
+column_spec <- spec(reduced_data)
+column_spec
+```
+
+I, then, created code to clean the data removing misssing values and changing them to NA. 
+
+```{r}
+library(readr)
+library(dplyr)
+
+# Display the structure of the data
+str(reduced_data)
+
+# Check for missing values
+missing_values <- sum(is.na(reduced_data))
+cat("Number of missing values in the dataset:", missing_values, "\n")
+
+# Replace missing values (if coded as 999) with NA
+reduced_data <- reduced_data %>%
+  mutate_all(~ ifelse(. == 999, NA, .))
+```
+In order to view only a few variables in the data out of the 33 available, I decided that Class, Question, the data value attached to the question, education income and race/ethnicity were pertinent variables. Geographical location was kept as a separate viariable to analyze. 
+
+```{r}
+# Select a few variables for analysis (e.g., first 5 variables)
+selected_variables <- reduced_data %>%
+  select(LocationDesc, Class, Question, Data_Value, Education, Income, `Race/Ethnicity`)
+
+# Display summary statistics for selected variables
+summary(selected_variables)
+```
+To explore the data further, I ran code to assess the distribution of categorical variables below. 
+
+```{r}
+library(dplyr)
+library(ggplot2)
+# Perform exploratory analysis
+# Summary table for categorical variables with percentages
+categorical_summary <- reduced_data %>%
+  summarize(
+    LocationDesc_percent = n_distinct(LocationDesc) / n() * 100,
+    Class_percent = n_distinct(Class) / n() * 100,
+    Question_percent = n_distinct(Question) / n() * 100,
+    Education_percent = n_distinct(Education) / n() * 100,
+    Income_percent = n_distinct(Income) / n() * 100,
+    Race_Ethnicity_percent = n_distinct(`Race/Ethnicity`) / n() * 100
+  )
+
+# Summary statistics for continuous variable
+continuous_summary <- reduced_data %>%
+  summarize(
+    Data_Value_mean = mean(Data_Value, na.rm = TRUE),
+    Data_Value_sd = sd(Data_Value, na.rm = TRUE)
+  )
+
+# Print summary tables
+print("Summary Table for Categorical Variables:")
+print(categorical_summary)
+cat("\n")
+
+print("Summary Table for Continuous Variables:")
+print(continuous_summary)
+```
+
+Here, I created a plot to show the ditribution of data by physical activity class and filtered out the question "Percent engaging in no leisure-time physical activity" to look at the distibution of data within this class and question. 
+
+```{r}
+library(dplyr)
+
+physical_activity_data <- reduced_data %>%
+  filter(Class == "Physical Activity")
+
+physical_activity_no_leisure_data <- reduced_data %>%
+  filter(Class == "Physical Activity" & 
+         Question == "Percent of adults who engage in no leisure-time physical activity")
+
+library(ggplot2)
+
+# Summary table for categorical variables
+categorical_summary <- physical_activity_no_leisure_data %>%
+  summarise(across(c(LocationDesc, Education, Income, `Race/Ethnicity`), ~round(mean(.)*100, 2))) %>%
+  rename(LocationDesc_Percentage = LocationDesc,
+         Education_Percentage = Education,
+         Income_Percentage = Income,
+         Race_Ethnicity_Percentage = `Race/Ethnicity`)
+
+print("Summary of Categorical Variables:")
+print(categorical_summary)
+
+# Histogram and summary statistics for the continuous variable Data_Value
+ggplot(physical_activity_no_leisure_data, aes(x = Data_Value)) +
+  geom_histogram(binwidth = 5, fill = "skyblue", color = "black", alpha = 0.7) +
+  labs(title = "Distribution of Percentages of Adults\nEngaging in No Leisure-Time Physical Activity",
+       x = "Percentage of Adults",
+       y = "Frequency") +
+  theme_minimal()
+
+mean_data_value <- mean(physical_activity_no_leisure_data$Data_Value)
+sd_data_value <- sd(physical_activity_no_leisure_data$Data_Value)
+
+print("Summary of Continuous Variable (Data_Value):")
+print(paste("Mean:", round(mean_data_value, 2)))
+print(paste("Standard Deviation:", round(sd_data_value, 2)))
+```
+
