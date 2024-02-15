@@ -2,4 +2,460 @@
 title: "Presentation Exercise"
 ---
 
-Placeholder file for the future data/results presentation exercise.
+# Introduction
+
+This is my presentation exercise where I will be recreating a graph from FiveThirtyEight. The article's title is "Blatter’s Reign At FIFA Hasn’t Helped Soccer’s Poor" by Nate Silver. I downloaded the data from their database and asked ChatGPT to create code based on these instructions:
+
+# Creating the Graph
+
+## Edit 1
+
+### My Prompt:
+
+Using this data, can you create R code that makes 6 different graphs for each of confederation showing the point change in elo98 to elo15. each change is represented by an arrow where a green arrow represents a positive change and a red arrow is a negative change. Each country goes in descending alphabetical order and the average change of the confederation is represented at the bottom. the x axis starts at 500 to 2500 with gridlines every 500 elo.
+
+### AI Response:
+
+```{r}
+library(ggplot2)
+
+# Load the data
+elodata <- read.csv("elo_blatter.csv")
+
+# Calculate the point change in elo98 to elo15
+elodata$change <- elodata$elo15 - elodata$elo98
+
+# Function to create a graph for each confederation
+create_confederation_graph <- function(confederation) {
+  conf_data <- subset(elodata, confederation == confederation)
+  conf_data <- conf_data[order(conf_data$country, decreasing = TRUE), ]  # Sort by descending alphabetical order
+  
+  # Calculate average change for the confederation
+  avg_change <- mean(conf_data$change)
+  
+  # Create the plot
+  p <- ggplot(conf_data, aes(x = country, y = change)) +
+    geom_segment(aes(xend = country, yend = 0, color = ifelse(change >= 0, "Positive", "Negative")),
+                 arrow = arrow(length = unit(0.25, "cm")), size = 1) +
+    geom_point(color = ifelse(conf_data$change >= 0, "green", "red"), size = 2) +
+    geom_text(aes(label = change), vjust = -0.5) +
+    geom_hline(yintercept = avg_change, linetype = "dashed", color = "blue") +
+    labs(title = paste("Point Change in elo98 to elo15 -", confederation),
+         x = "Country", y = "Change in elo98 to elo15") +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+  
+  print(p)
+}
+
+# Create graphs for each confederation
+confederations <- unique(elodata$confederation)
+for (conf in confederations) {
+  create_confederation_graph(conf)
+}
+```
+
+## Edit 2
+
+### My Prompt:
+
+For CONMEBOL, only show results from Brazil, colombia, argentina, peru, venezuela, chile, ecuador, bolivia, paraguay and uruguay
+
+For CONCACAF, only chow results from United States, Mexico, canada, guatemala, cuba, domican Rep., haiti, Honduras, el.salvador and nicaragua
+
+For AFC, only chow results from China, India, Indonesia, Pakistan, Bangladesh, Japan, Philippines, Vietnam, Iran and Thailand
+
+For UEFA, only chow results from Russia, Germany, Turkey, France, Italy, England, Ukraine, Spain, Poland and Romania
+
+For CAF, only chow results from Nigeria, Ethiopia, Egypt, Dem.Rep.Congo, South Africa, Tanzania, Kenya, Algeria, Sudan and Morocco
+
+For OFC, only chow results from Papua New Guinea, New Zealand, Fiji, Solomon Islands, New Caledonia, Vanuatu, Samoa, Tahiti, Tonga, American Samoa ChatGPT Sure, let's modify the code to include only the specified countries for each confederation:
+
+### AI Response
+
+```{r}
+library(ggplot2)
+
+# Load the data
+elodata <- read.csv("elo_blatter.csv")
+
+# Filter data for specified countries in each confederation
+conmebol_countries <- c("Brazil", "Colombia", "Argentina", "Peru", "Venezuela", "Chile", "Ecuador", "Bolivia", "Paraguay", "Uruguay")
+conmebol_data <- subset(elodata, confederation == "CONMEBOL" & country %in% conmebol_countries)
+
+concacaf_countries <- c("United States", "Mexico", "Canada", "Guatemala", "Cuba", "Dominican Rep.", "Haiti", "Honduras", "El Salvador", "Nicaragua")
+concacaf_data <- subset(elodata, confederation == "CONCACAF" & country %in% concacaf_countries)
+
+afc_countries <- c("China", "India", "Indonesia", "Pakistan", "Bangladesh", "Japan", "Philippines", "Vietnam", "Iran", "Thailand")
+afc_data <- subset(elodata, confederation == "AFC" & country %in% afc_countries)
+
+uefa_countries <- c("Russia", "Germany", "Turkey", "France", "Italy", "England", "Ukraine", "Spain", "Poland", "Romania")
+uefa_data <- subset(elodata, confederation == "UEFA" & country %in% uefa_countries)
+
+caf_countries <- c("Nigeria", "Ethiopia", "Egypt", "Dem.Rep.Congo", "South Africa", "Tanzania", "Kenya", "Algeria", "Sudan", "Morocco")
+caf_data <- subset(elodata, confederation == "CAF" & country %in% caf_countries)
+
+ofc_countries <- c("Papua New Guinea", "New Zealand", "Fiji", "Solomon Islands", "New Caledonia", "Vanuatu", "Samoa", "Tahiti", "Tonga", "American Samoa")
+ofc_data <- subset(elodata, confederation == "OFC" & country %in% ofc_countries)
+
+# Combine filtered data
+filtered_data <- rbind(conmebol_data, concacaf_data, afc_data, uefa_data, caf_data, ofc_data)
+
+# Calculate the point change in elo98 to elo15
+filtered_data$change <- filtered_data$elo15 - filtered_data$elo98
+
+# Function to create a graph for each confederation
+create_confederation_graph <- function(confederation, data) {
+  conf_data <- data
+  
+  # Calculate average change for the confederation
+  avg_change <- mean(conf_data$change)
+  
+  # Create the plot
+  p <- ggplot(conf_data, aes(x = country, y = change)) +
+    geom_segment(aes(xend = country, yend = 0, color = ifelse(change >= 0, "Positive", "Negative")),
+                 arrow = arrow(length = unit(0.25, "cm")), size = 1) +
+    geom_point(color = ifelse(conf_data$change >= 0, "green", "red"), size = 2) +
+    geom_text(aes(label = change), vjust = -0.5) +
+    geom_hline(yintercept = avg_change, linetype = "dashed", color = "blue") +
+    labs(title = paste("Point Change in elo98 to elo15 -", confederation),
+         x = "Country", y = "Change in elo98 to elo15") +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+  
+  print(p)
+}
+
+# Create graphs for each confederation
+confederations <- unique(filtered_data$confederation)
+for (conf in confederations) {
+  create_confederation_graph(conf, subset(filtered_data, confederation == conf))
+}
+```
+
+This code will generate graphs for each confederation using only the specified countries. Let me know if you need further assistance!
+
+### My Prompt:
+
+Put the countries on the Y axis and instead of showing change from 0, display change as lines from elo98 to elo15 with the end point being an arrow. The x axis should start at 500 and end at 2000.
+
+### AI Response:
+
+Sure, here's the modified code to display the change as lines from elo98 to elo15 with the end point being an arrow, and the countries on the Y-axis:
+
+```{r}
+library(ggplot2)
+
+# Load the data
+elodata <- read.csv("elo_blatter.csv")
+
+# Filter data for specified countries in each confederation
+conmebol_countries <- c("Brazil", "Colombia", "Argentina", "Peru", "Venezuela", "Chile", "Ecuador", "Bolivia", "Paraguay", "Uruguay")
+conmebol_data <- subset(elodata, confederation == "CONMEBOL" & country %in% conmebol_countries)
+
+concacaf_countries <- c("United States", "Mexico", "Canada", "Guatemala", "Cuba", "Dominican Rep.", "Haiti", "Honduras", "El Salvador", "Nicaragua")
+concacaf_data <- subset(elodata, confederation == "CONCACAF" & country %in% concacaf_countries)
+
+afc_countries <- c("China", "India", "Indonesia", "Pakistan", "Bangladesh", "Japan", "Philippines", "Vietnam", "Iran", "Thailand")
+afc_data <- subset(elodata, confederation == "AFC" & country %in% afc_countries)
+
+uefa_countries <- c("Russia", "Germany", "Turkey", "France", "Italy", "England", "Ukraine", "Spain", "Poland", "Romania")
+uefa_data <- subset(elodata, confederation == "UEFA" & country %in% uefa_countries)
+
+caf_countries <- c("Nigeria", "Ethiopia", "Egypt", "Dem.Rep.Congo", "South Africa", "Tanzania", "Kenya", "Algeria", "Sudan", "Morocco")
+caf_data <- subset(elodata, confederation == "CAF" & country %in% caf_countries)
+
+ofc_countries <- c("Papua New Guinea", "New Zealand", "Fiji", "Solomon Islands", "New Caledonia", "Vanuatu", "Samoa", "Tahiti", "Tonga", "American Samoa")
+ofc_data <- subset(elodata, confederation == "OFC" & country %in% ofc_countries)
+
+# Combine filtered data
+filtered_data <- rbind(conmebol_data, concacaf_data, afc_data, uefa_data, caf_data, ofc_data)
+
+# Calculate the point change in elo98 to elo15
+filtered_data$change <- filtered_data$elo15 - filtered_data$elo98
+
+# Function to create a graph for each confederation
+create_confederation_graph <- function(confederation, data) {
+  conf_data <- data
+  
+  # Create the plot
+  p <- ggplot(conf_data, aes(x = elo98, y = country, xend = elo15, yend = country, color = ifelse(change >= 0, "Positive", "Negative"))) +
+    geom_segment(arrow = arrow(length = unit(0.25, "cm")), size = 1) +
+    geom_point(color = ifelse(conf_data$change >= 0, "green", "red"), size = 2) +
+    labs(title = paste("Point Change in elo98 to elo15 -", confederation),
+         x = "elo98", y = "Country") +
+    scale_x_continuous(limits = c(500, 2000), breaks = seq(500, 2000, by = 500)) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+  
+  print(p)
+}
+
+# Create graphs for each confederation
+confederations <- unique(filtered_data$confederation)
+for (conf in confederations) {
+  create_confederation_graph(conf, subset(filtered_data, confederation == conf))
+}
+```
+
+## Final Code After (mostly) Final Editing
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+# Load the data
+elodata <- read.csv("elo_blatter.csv")
+
+# Filter data for specified countries in each confederation
+conmebol_countries <- c("Brazil", "Colombia", "Argentina", "Peru", "Venezuela", "Chile", "Ecuador", "Bolivia", "Paraguay", "Uruguay")
+conmebol_data <- subset(elodata, confederation == "CONMEBOL" & country %in% conmebol_countries)
+
+concacaf_countries <- c("United States", "Mexico", "Canada", "Guatemala", "Cuba", "Dominican Rep.", "Haiti", "Honduras", "El Salvador", "Nicaragua")
+concacaf_data <- subset(elodata, confederation == "CONCACAF" & country %in% concacaf_countries)
+
+afc_countries <- c("China", "India", "Indonesia", "Pakistan", "Bangladesh", "Japan", "Philippines", "Vietnam", "Iran", "Thailand")
+afc_data <- subset(elodata, confederation == "AFC" & country %in% afc_countries)
+
+uefa_countries <- c("Russia", "Germany", "Turkey", "France", "Italy", "England", "Ukraine", "Spain", "Poland", "Romania")
+uefa_data <- subset(elodata, confederation == "UEFA" & country %in% uefa_countries)
+
+caf_countries <- c("Nigeria", "Ethiopia", "Egypt", "Dem.Rep.Congo", "South Africa", "Tanzania", "Kenya", "Algeria", "Sudan", "Morocco")
+caf_data <- subset(elodata, confederation == "CAF" & country %in% caf_countries)
+
+ofc_countries <- c("Papua New Guinea", "New Zealand", "Fiji", "Solomon Islands", "New Caledonia", "Vanuatu", "Samoa", "Tahiti", "Tonga", "American Samoa")
+ofc_data <- subset(elodata, confederation == "OFC" & country %in% ofc_countries)
+
+# Combine filtered data
+filtered_data <- rbind(conmebol_data, concacaf_data, afc_data, uefa_data, caf_data, ofc_data)
+
+# Calculate the point change in elo98 to elo15
+filtered_data$change <- filtered_data$elo15 - filtered_data$elo98
+
+# Calculate average changes for each confederation
+conf_avg_changes <- filtered_data %>%
+  group_by(confederation) %>%
+  summarise(avg_change = mean(change, na.rm = TRUE))
+
+# Function to create a graph for each confederation
+create_confederation_graph <- function(confederation, data) {
+  conf_data <- data
+  avg_change <- conf_avg_changes$avg_change[conf_avg_changes$confederation == confederation]
+  
+  # Create the plot
+  p <- ggplot(conf_data, aes(x = elo98, y = country, xend = elo15, yend = country, color = ifelse(change >= 0, "Positive", "Negative"))) +
+    geom_segment(arrow = arrow(type = "closed", length = unit(0.25, "cm")), size = 1) +
+    labs(title = paste("-", confederation),
+         x = "Change in Elo", y = "Country") +
+    scale_color_manual(values = c("Positive" = "green", "Negative" = "red")) +
+    scale_x_continuous(limits = c(500, 2000), breaks = seq(500, 2000, by = 500)) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+   annotate("text", x = 500, y = -Inf, vjust = 0, hjust = 0, label = paste("Average Change:", ifelse(avg_change > 0, "+", "-"), round(abs(avg_change), 2)), color = "grey")
+  
+  print(p)
+}
+
+# Create graphs for each confederation
+confederations <- unique(filtered_data$confederation)
+for (conf in confederations) {
+  create_confederation_graph(conf, subset(filtered_data, confederation == conf))
+}
+```
+
+## Sample Graph Used
+
+```{r}
+knitr::include_graphics("BlatterGraph.png")
+```
+
+The graph is relatively the same bar a few differences. My main concern was that I was unable to get Brazil and Argentina to show on the graph as there were values that R would not reading and claimed was missing despite multiple checks on of the data.
+
+The average changes were also incorrect. However, I believe this was due to not having the averages be filtered out as well. \*Will fix later
+
+# Creating the Table
+
+## Edit 1
+
+### My Prompt:
+
+Create a table of this data using flextable
+
+### AI Response
+
+```{r}
+#Load the flextable package
+
+library(flextable)
+
+# Assuming your data frame is named elodata
+# If not, replace elodata with the name of your data frame
+# Assuming the first row of your data frame contains column names
+
+# Create a flextable object
+ft <- flextable(elodata)
+
+# Display the flextable
+ft
+```
+
+## Edit 2
+
+### My Prompt
+
+Edit table so it only shows country, elo98, elo 15 and confederation
+
+### AI Response
+
+To display only specific columns from your data frame in the flextable, you can subset your data frame to include only the desired columns before creating the flextable. Here's how you can do it:
+
+```{r}
+#Load the flextable package
+library(flextable)
+
+# Assuming your data frame is named elodata
+# If not, replace elodata with the name of your data frame
+
+# Subset the data frame to include only the desired columns
+selected_columns <- c("country", "elo98", "elo15", "confederation")
+subset_data <- elodata[selected_columns]
+
+# Create a flextable object from the subsetted data frame
+ft <- flextable(subset_data)
+
+# Display the flextable
+ft
+```
+
+## Edit 3
+
+### My Prompt
+
+Only include countries that are included in the graph and organize by confederation
+
+### AI Response
+
+To include only countries that are included in the graph and organize by confederation in the flextable, you can filter the data frame to include only the relevant countries and then organize the table accordingly. Here's how you can do it:
+
+```{r}
+# Load the flextable package
+library(flextable)
+
+# Filter the data frame to include only the relevant countries
+selected_countries <- c("Brazil", "Colombia", "Argentina", "Peru", "Venezuela", 
+                        "Chile", "Ecuador", "Bolivia", "Paraguay", "Uruguay",
+                        "United States", "Mexico", "Canada", "Guatemala", "Cuba",
+                        "Dominican Rep.", "Haiti", "Honduras", "El Salvador", "Nicaragua",
+                        "China", "India", "Indonesia", "Pakistan", "Bangladesh",
+                        "Japan", "Philippines", "Vietnam", "Iran", "Thailand",
+                        "Russia", "Germany", "Turkey", "France", "Italy",
+                        "England", "Ukraine", "Spain", "Poland", "Romania",
+                        "Nigeria", "Ethiopia", "Egypt", "Dem. Rep. Congo", "South Africa",
+                        "Tanzania", "Kenya", "Algeria", "Sudan", "Morocco",
+                        "Papua New Guinea", "New Zealand", "Fiji", "Solomon Islands", "New Caledonia",
+                        "Vanuatu", "Samoa", "Tahiti", "Tonga", "American Samoa")
+filtered_data <- elodata[elodata$country %in% selected_countries,]
+
+# Order the filtered data frame by confederation
+ordered_data <- filtered_data[order(filtered_data$confederation),]
+
+# Subset the ordered data frame to include only the desired columns
+selected_columns <- c("country", "elo98", "elo15", "confederation")
+subset_data <- ordered_data[selected_columns]
+
+# Create a flextable object from the subsetted data frame
+ft <- flextable(subset_data)
+
+# Display the flextable
+ft
+```
+
+## Final Table Iteration
+
+With some addtional edits to add color and presentation this is the code for the final table. Data highlighted in Blue represents a higher Elo than in 1998 and Red is a lower Elo.
+
+```{r}
+library(flextable)
+
+# Filter the data frame to include only the relevant countries
+selected_countries <- c("Brazil", "Colombia", "Argentina", "Peru", "Venezuela", 
+                        "Chile", "Ecuador", "Bolivia", "Paraguay", "Uruguay",
+                        "United States", "Mexico", "Canada", "Guatemala", "Cuba",
+                        "Dominican Rep.", "Haiti", "Honduras", "El Salvador", "Nicaragua",
+                        "China", "India", "Indonesia", "Pakistan", "Bangladesh",
+                        "Japan", "Philippines", "Vietnam", "Iran", "Thailand",
+                        "Russia", "Germany", "Turkey", "France", "Italy",
+                        "England", "Ukraine", "Spain", "Poland", "Romania",
+                        "Nigeria", "Ethiopia", "Egypt", "Dem. Rep. Congo", "South Africa",
+                        "Tanzania", "Kenya", "Algeria", "Sudan", "Morocco",
+                        "Papua New Guinea", "New Zealand", "Fiji", "Solomon Islands", "New Caledonia",
+                        "Vanuatu", "Samoa", "Tahiti", "Tonga", "American Samoa")
+filtered_data <- elodata[elodata$country %in% selected_countries,]
+
+# Order the filtered data frame by confederation
+ordered_data <- filtered_data[order(filtered_data$confederation),]
+
+# Subset the ordered data frame to include only the desired columns
+selected_columns <- c("country", "elo98", "elo15", "confederation")
+subset_data <- ordered_data[selected_columns]
+
+# Change column names
+colnames(subset_data) <- c("Country", "Elo in 1998", "Elo in 2015", "Confederation")
+
+# Create a flextable object from the subsetted data frame
+ft <- flextable(subset_data)
+
+# Generate a logic vector based on whether Elo in 2015 is higher than Elo in 1998
+logic_vector <- subset_data$`Elo in 2015` > subset_data$`Elo in 1998`
+
+# Now, apply the conditional formatting
+ft <- color(ft, i = logic_vector, part = "body", j = "Elo in 2015", color = "blue")
+ft <- color(ft, i = !logic_vector, part = "body", j = "Elo in 2015", color = "red")
+
+# Define colors for each confederation
+confederation_colors <- c("lightyellow", "orange", "lavender", "pink", "cyan", "lightgreen", "tan")
+confederation_levels <- unique(subset_data$Confederation)
+confederation_logic_vector <- factor(subset_data$Confederation, levels = confederation_levels)
+
+# Create a logic vector to identify the countries
+country_logic_vector <- rep(TRUE, nrow(subset_data)) # Assuming all rows are countries
+
+# Fill cells with light grey for countries
+ft <- bg(ft, i = country_logic_vector, bg = "lightgrey")
+
+# Create a vector of colors for each row based on confederation
+cell_colors <- sapply(confederation_logic_vector, function(conf) {
+  if (conf == "CAF") {
+    return("lightyellow")
+  } else if (conf == "CONMEBOL") {
+    return("orange")
+  } else if (conf == "CONCACAF") {
+    return("lavender")
+  } else if (conf == "UEFA") {
+    return("pink")
+  } else if (conf == "AFC") {
+    return("cyan")
+  } else if (conf == "OFC") {
+    return("lightgreen")
+  } else {
+    return("tan")
+  }
+}, USE.NAMES = FALSE)
+
+# Fill cells with colors based on confederation
+for (i in 1:length(cell_colors)) {
+  if (!is.na(cell_colors[i])) {
+    ft <- bg(ft, i = i, j = "Confederation", bg = cell_colors[i])
+  }
+}
+
+# Define logic vectors for variable names (column headers)
+variable_names_logic_vector <- rep(TRUE, ncol(subset_data)) # Assuming all columns are variable names
+
+# Fill cells with white for variable names
+ft <- bg(ft, part = "header", bg = "white")
+
+border <- fp_border_default()
+vline(ft, j = c('Country', 'Elo in 2015'), border = border, part = "all")
+
+# Display the flextable
+ft
+```
