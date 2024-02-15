@@ -5,10 +5,15 @@ editor:
     wrap: 72
 ---
 
+When I first downloaded my data in, the size of the file was 33 MB
+large. R was unable to load the file so I decided to import the data.
+After importing the data, I wrote the code beloww to reduce the size of
+the to 1000 observations. I created the reduced set name (reduced_data)
+and cleaned the data with the following code.
 
-When I first downloaded my data in, the size of the file was 33 MB large. R was unable to load the file so I decided to import the data. After importing the data, I wrote the code beloww to reduce the size of the to 1000 observations. I created the reduced set name (reduced_data) and cleaned the data with the following code. 
+#This chunk only works in the R terminal as I cannot figure out how it
+will work within the qmd file.
 
-#This chunk only works in the R terminal as I cannot figure out how it will work within the qmd file. 
 ```{r}
 library(readr)
 library(dplyr)
@@ -30,7 +35,8 @@ column_spec <- spec(reduced_data)
 column_spec
 ```
 
-I, then, created code to clean the data removing misssing values and changing them to NA. 
+I, then, created code to clean the data removing misssing values and
+changing them to NA.
 
 ```{r}
 library(readr)
@@ -47,7 +53,12 @@ cat("Number of missing values in the dataset:", missing_values, "\n")
 reduced_data <- reduced_data %>%
   mutate_all(~ ifelse(. == 999, NA, .))
 ```
-In order to view only a few variables in the data out of the 33 available, I decided that Class, Question, the data value attached to the question, education income and race/ethnicity were pertinent variables. Geographical location was kept as a separate viariable to analyze. 
+
+In order to view only a few variables in the data out of the 33
+available, I decided that Class, Question, the data value attached to
+the question, education income and race/ethnicity were pertinent
+variables. Geographical location was kept as a separate viariable to
+analyze.
 
 ```{r}
 # Select a few variables for analysis (e.g., first 5 variables)
@@ -57,7 +68,9 @@ selected_variables <- reduced_data %>%
 # Display summary statistics for selected variables
 summary(selected_variables)
 ```
-To explore the data further, I ran code to assess the distribution of categorical variables below. 
+
+To explore the data further, I ran code to assess the distribution of
+categorical variables below.
 
 ```{r}
 library(dplyr)
@@ -90,7 +103,10 @@ print("Summary Table for Continuous Variables:")
 print(continuous_summary)
 ```
 
-Here, I created a plot to show the ditribution of data by physical activity class and filtered out the question "Percent engaging in no leisure-time physical activity" to look at the distibution of data within this class and question. 
+Here, I created a plot to show the ditribution of data by physical
+activity class and filtered out the question "Percent engaging in no
+leisure-time physical activity" to look at the distibution of data
+within this class and question.
 
 ```{r}
 library(dplyr)
@@ -131,3 +147,172 @@ print(paste("Mean:", round(mean_data_value, 2)))
 print(paste("Standard Deviation:", round(sd_data_value, 2)))
 ```
 
+## This section was contributed by Erick Mollinedo
+
+### Creating the dataset
+
+For this part I only used the following packages:
+
+```{r}
+library(tidyverse)
+library(purrr)
+library(gtsummary)
+```
+
+I am assuming that the cleaned dataset is listed as `selected_variables`. The summaries of all the variables (except the
+`Data_Value` variable) were not clear, since there were a lot of NAs, so I decided to produce a summary of the unclear variables. This part
+summarizes all the values from each categorical variable.
+
+```{r}
+#List all the values of the `Location_Desc` variable, using `unique()` and list them ascending using `sort()`
+unique(selected_variables$LocationDesc) %>% sort()
+
+#List all the values of the `Class` variable, using `unique()` and list them ascending using `sort()`
+unique(selected_variables$Class) %>% sort()
+
+#List all the values of the `Question` variable, using `unique()` and list them ascending using `sort()`
+unique(selected_variables$Question) %>% sort()
+
+#List all the values of the `Education` variable, using `unique()` and list them ascending using `sort()`
+unique(selected_variables$Education) %>% sort()
+
+#List all the values of the `Income` variable, using `unique()` and list them ascending using `sort()`
+unique(selected_variables$Income) %>% sort()
+
+#List all the values of the `Race/Ethnicity` variable, using `unique()` and list them ascending using `sort()`
+unique(selected_variables$`Race/Ethnicity`) %>% sort()
+```
+
+Now, estimating the percent of each value per each variable, using the `table()` and `prop.table()` functions.
+
+```{r}
+#`Location_Desc`
+freq_location <- table(selected_variables$LocationDesc)
+percent_location <- prop.table(freq_location) * 100
+print(percent_location)
+
+#`Class`
+freq_class <- table(selected_variables$Class)
+percent_class <- prop.table(freq_class) * 100
+print(percent_class)
+
+#`Question`
+freq_question <- table(selected_variables$Question)
+percent_question <- prop.table(freq_question) * 100
+print(percent_question)
+
+#`Education`
+freq_education <- table(selected_variables$Education)
+percent_education <- prop.table(freq_education) * 100
+print(percent_education)
+
+#`Income`
+freq_income <- table(selected_variables$Income)
+percent_income <- prop.table(freq_income) * 100
+print(percent_income)
+
+#`Race/Ethnicity`
+freq_race <- table(selected_variables$`Race/Ethnicity`)
+percent_race <- prop.table(freq_race) * 100
+print(percent_race)
+```
+
+First, I set a seed for reproducibility and then I defined the number of observations for this dataset
+
+```{r}
+set.seed(123)
+
+#Defined 60 as the number of observations (n=60 wildland firefighters)
+n_behavior <- 1000
+```
+
+Here, creating the empty data frame `behavior_data` with the seven
+previously explored variables.
+
+```{r}
+behavior_data <- data.frame(
+  Location_Desc = character(n_behavior),
+  Class = character(n_behavior),
+  Question = character(n_behavior),
+  Data_Value = numeric(n_behavior),
+  Education = character(n_behavior),
+  Income = character(n_behavior),
+  `Race/Ethnicity` = character(n_behavior)
+)
+```
+
+And here I fill each variable with their respective values
+
+```{r}
+#`Location_Desc`: First I created a list from all unique locations seen above.
+unique_location <- unique(selected_variables$LocationDesc)
+unique_location_list <- as.list(unique_location)
+
+#And then estimating the probability for each value
+prob_location <- 1 / length(unique_location_list)
+
+#Then I created the variable, estimating the probability for each location to be similar for each location
+behavior_data$Location_Desc <- map_chr(sample(unique_location_list, n_behavior, replace = T, prob = rep(prob_location, length(unique_location_list))), as.character)
+
+#`Class`:
+behavior_data$Class <- map_chr(sample(c("Fruits and Vegetables", "Obesity/Weight Status", "Physical Activity"), n_behavior, replace = T, prob = c(0.09, 0.36, 0.55)), as.character)
+
+#`Question`: For this variable I also used the same steps from the `Location_Des` variable
+unique_question <- unique(selected_variables$Question)
+unique_question_list <- as.list(unique_question)
+prob_question <- 1 / length(unique_question_list)
+
+behavior_data$Question <- map_chr(sample(unique_question_list, n_behavior, replace = T, prob = rep(prob_question, length(unique_question_list))), as.character)
+
+#`Data_Value`: Setting the mean and SD.
+behavior_data$Data_Value <- round(rnorm(n_behavior, mean = 31.0163, sd = 10.15591), 1)
+
+#`Education`: Reflecting the approximate percent for each value
+behavior_data$Education <- map_chr(sample(c("College graduate", "High school graduate", "Less than high school", "Some college or technical school"), n_behavior, replace = T, prob = c(0.30, 0.21, 0.25, 0.24)), as.character)
+
+#`Income`: Reflecting the approximate percent for each value
+behavior_data$Income <- map_chr(sample(c("$15,000 - $24,999", "$25,000 - $34,999", "$35,000 - $49,999", "$50,000 - $74,999", "$75,000 or greater", "Data not reported", "Less than $15,000"), n_behavior, replace = T, prob = c(0.13, 0.15, 0.15, 0.13, 0.13, 0.14, 0.17)), as.character)
+
+#`Race/Ethnicity`: Also reflecting the most accurate probabilities for each value
+behavior_data$Race.Ethnicity <- map_chr(sample(c("2 or more races", "American Indian/Alaska Native", "Asian", "Hawaiian/Pacific Islander", "Hispanic", "Non-Hispanic Black", "Non-Hispanic White", "Other"), n_behavior, replace = T, prob = c(0.15, 0.13, 0.12, 0.13, 0.12, 0.12, 0.12, 0.11)), as.character)
+```
+
+The dataframe is ready to do the summarization/exploration.
+
+### Data exploration/summarization
+
+First I summarized the `Data_Value` variable using a barplot to observe where the average values are located. Then, producinga a summary of the mean, median, min, max and the IQR.
+
+```{r}
+#Using `ggplot()` and `geom_histogram()` to plot the values of `Data_Value`
+ggplot(behavior_data, aes(x= Data_Value))+
+  geom_histogram()+
+  theme_bw()
+
+#Produce a summary of the new dataframe using the `summary()` function
+summary(behavior_data$Data_Value)
+```
+
+Based on the plot and the summary, it looks like this variable was
+correctly recreated. However, there are some missing values from the
+original dataset and these were not considered.
+
+Now I produced a table that summarizes the other 6 categorical
+variables.
+
+```{r}
+#Using the `tbl_summary()` function to produce a frequency summary of the 6 categorical variables from the cleaned dataset
+cat_summary <- behavior_data %>% 
+  select(Location_Desc, Class, Question, Education, Income, Race.Ethnicity) %>% 
+  tbl_summary() %>% 
+  bold_labels()
+
+cat_summary
+```
+
+Based on the table above it is seen that the percentage for each value for each category is what it was expected.
+
+Although the synthetic data (`behavior_data`) is very similar to the
+original `selected_variables` dataset, it is missing the NA values.
+Another line of code would be necessary to include the percentage of NAs in the `Data_Value`, `Education`, `Income` and `Race.Ethnicity`
+variables.
