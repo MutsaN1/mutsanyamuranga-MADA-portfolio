@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Mutsa’s Data Analysis Portfolio - Data Analysis Exercise</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Mutsa’s Data Analysis Portfolio</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../aboutme.html" rel="" target="">
+ <span class="menu-text">About Me</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-projects" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Projects</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-projects">    
+        <li>
+    <a class="dropdown-item" href="../starter-analysis-exercise/products/report/starter-analysis-report.html" rel="" target="">
+ <span class="dropdown-text">Starter Analysis Exercise</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../coding-exercise/coding-exercise.html" rel="" target="">
+ <span class="dropdown-text">R Coding Exercise</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../presentation-exercise/presentation-exercise.html" rel="" target="">
+ <span class="dropdown-text">Presentation Exercise</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../tidytuesday-exercise/tidytuesday-exercise.html" rel="" target="">
+ <span class="dropdown-text">TidyTuesday Exercise</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../syntheticdata-exercise/syntheticdata-exercise.html" rel="" target="">
+ <span class="dropdown-text">Synthetic Data Exercise</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../cdcdata-exercise/cdcdata-exercise.html" rel="" target="">
+ <span class="dropdown-text">Data Analysis Exercise</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../fitting-exercise/fitting-exercise.html" rel="" target="">
+ <span class="dropdown-text">Fitting Exercise</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/MutsaN1/mutsanyamuranga-MADA-portfolio.git" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Data Analysis Exercise</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>When I first downloaded my data in, the size of the file was 33 MB large. R was unable to load the file so I decided to import the data. After importing the data, I wrote the code beloww to reduce the size of the to 1000 observations. I created the reduced set name (reduced_data) and cleaned the data with the following code.</p>
+<p>#This chunk only works in the R terminal as I cannot figure out how it will work within the qmd file.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>original_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"Nutrition__Physical_Activity__and_Obesity_-_Behavioral_Risk_Factor_Surveillance_System_20240207.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 1000 Columns: 33</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (25): LocationAbbr, LocationDesc, Datasource, Class, Topic, Question, Da...
+dbl  (7): YearStart, YearEnd, Data_Value, Data_Value_Alt, Low_Confidence_Lim...
+lgl  (1): Data_Value_Unit
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the desired number of rows to include in the reduced dataset</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>desired_rows <span class="ot">&lt;-</span> <span class="dv">1000</span>  <span class="co"># Adjust this number as needed</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Select a random subset of rows</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>reduced_data <span class="ot">&lt;-</span> original_data <span class="sc">%&gt;%</span> </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sample_n</span>(desired_rows)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Write the reduced dataset to a new CSV file</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(reduced_data, <span class="st">"Nutrition__Physical_Activity__and_Obesity_-_Behavioral_Risk_Factor_Surveillance_System_20240207.csv"</span>)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrieve the full column specification</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>column_spec <span class="ot">&lt;-</span> <span class="fu">spec</span>(reduced_data)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>column_spec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>cols(
+  YearStart = col_double(),
+  YearEnd = col_double(),
+  LocationAbbr = col_character(),
+  LocationDesc = col_character(),
+  Datasource = col_character(),
+  Class = col_character(),
+  Topic = col_character(),
+  Question = col_character(),
+  Data_Value_Unit = col_logical(),
+  Data_Value_Type = col_character(),
+  Data_Value = col_double(),
+  Data_Value_Alt = col_double(),
+  Data_Value_Footnote_Symbol = col_character(),
+  Data_Value_Footnote = col_character(),
+  Low_Confidence_Limit = col_double(),
+  High_Confidence_Limit = col_double(),
+  Sample_Size = col_double(),
+  Total = col_character(),
+  `Age(years)` = col_character(),
+  Education = col_character(),
+  Gender = col_character(),
+  Income = col_character(),
+  `Race/Ethnicity` = col_character(),
+  GeoLocation = col_character(),
+  ClassID = col_character(),
+  TopicID = col_character(),
+  QuestionID = col_character(),
+  DataValueTypeID = col_character(),
+  LocationID = col_character(),
+  StratificationCategory1 = col_character(),
+  Stratification1 = col_character(),
+  StratificationCategoryId1 = col_character(),
+  StratificationID1 = col_character()
+)</code></pre>
+</div>
+</div>
+<p>I, then, created code to clean the data removing misssing values and changing them to NA.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the structure of the data</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(reduced_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>spc_tbl_ [1,000 × 33] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+ $ YearStart                 : num [1:1000] 2019 2011 2020 2014 2019 ...
+ $ YearEnd                   : num [1:1000] 2019 2011 2020 2014 2019 ...
+ $ LocationAbbr              : chr [1:1000] "GA" "MT" "HI" "TX" ...
+ $ LocationDesc              : chr [1:1000] "Georgia" "Montana" "Hawaii" "Texas" ...
+ $ Datasource                : chr [1:1000] "Behavioral Risk Factor Surveillance System" "Behavioral Risk Factor Surveillance System" "Behavioral Risk Factor Surveillance System" "Behavioral Risk Factor Surveillance System" ...
+ $ Class                     : chr [1:1000] "Physical Activity" "Physical Activity" "Obesity / Weight Status" "Obesity / Weight Status" ...
+ $ Topic                     : chr [1:1000] "Physical Activity - Behavior" "Physical Activity - Behavior" "Obesity / Weight Status" "Obesity / Weight Status" ...
+ $ Question                  : chr [1:1000] "Percent of adults who engage in no leisure-time physical activity" "Percent of adults who achieve at least 150 minutes a week of moderate-intensity aerobic physical activity or 75"| __truncated__ "Percent of adults aged 18 years and older who have obesity" "Percent of adults aged 18 years and older who have obesity" ...
+ $ Data_Value_Unit           : logi [1:1000] NA NA NA NA NA NA ...
+ $ Data_Value_Type           : chr [1:1000] "Value" "Value" "Value" "Value" ...
+ $ Data_Value                : num [1:1000] 32.6 23.4 21.3 7.8 30.8 41.3 34 34.4 31.4 34.1 ...
+ $ Data_Value_Alt            : num [1:1000] 32.6 23.4 21.3 7.8 30.8 41.3 34 34.4 31.4 34.1 ...
+ $ Data_Value_Footnote_Symbol: chr [1:1000] NA NA NA NA ...
+ $ Data_Value_Footnote       : chr [1:1000] NA NA NA NA ...
+ $ Low_Confidence_Limit      : num [1:1000] 15.6 21 17.3 4.4 24.4 38.8 29.2 31.2 26.7 29.8 ...
+ $ High_Confidence_Limit     : num [1:1000] 55.8 26 26 13.5 38.1 43.8 39.2 37.7 36.6 38.6 ...
+ $ Sample_Size               : num [1:1000] 51 2773 604 275 513 ...
+ $ Total                     : chr [1:1000] NA NA NA NA ...
+ $ Age(years)                : chr [1:1000] NA NA NA NA ...
+ $ Education                 : chr [1:1000] NA "Some college or technical school" NA NA ...
+ $ Gender                    : chr [1:1000] NA NA NA NA ...
+ $ Income                    : chr [1:1000] NA NA "$25,000 - $34,999" NA ...
+ $ Race/Ethnicity            : chr [1:1000] "American Indian/Alaska Native" NA NA "Asian" ...
+ $ GeoLocation               : chr [1:1000] "(32.83968109300048, -83.62758034599966)" "(47.066528972, -109.424420645)" "(21.304850435000446, -157.85774940299973)" "(31.827240407, -99.426770206)" ...
+ $ ClassID                   : chr [1:1000] "PA" "PA" "OWS" "OWS" ...
+ $ TopicID                   : chr [1:1000] "PA1" "PA1" "OWS1" "OWS1" ...
+ $ QuestionID                : chr [1:1000] "Q047" "Q044" "Q036" "Q036" ...
+ $ DataValueTypeID           : chr [1:1000] "VALUE" "VALUE" "VALUE" "VALUE" ...
+ $ LocationID                : chr [1:1000] "13" "30" "15" "48" ...
+ $ StratificationCategory1   : chr [1:1000] "Race/Ethnicity" "Education" "Income" "Race/Ethnicity" ...
+ $ Stratification1           : chr [1:1000] "American Indian/Alaska Native" "Some college or technical school" "$25,000 - $34,999" "Asian" ...
+ $ StratificationCategoryId1 : chr [1:1000] "RACE" "EDU" "INC" "RACE" ...
+ $ StratificationID1         : chr [1:1000] "RACENAA" "EDUCOTEC" "INC2535" "RACEASN" ...
+ - attr(*, "spec")=
+  .. cols(
+  ..   YearStart = col_double(),
+  ..   YearEnd = col_double(),
+  ..   LocationAbbr = col_character(),
+  ..   LocationDesc = col_character(),
+  ..   Datasource = col_character(),
+  ..   Class = col_character(),
+  ..   Topic = col_character(),
+  ..   Question = col_character(),
+  ..   Data_Value_Unit = col_logical(),
+  ..   Data_Value_Type = col_character(),
+  ..   Data_Value = col_double(),
+  ..   Data_Value_Alt = col_double(),
+  ..   Data_Value_Footnote_Symbol = col_character(),
+  ..   Data_Value_Footnote = col_character(),
+  ..   Low_Confidence_Limit = col_double(),
+  ..   High_Confidence_Limit = col_double(),
+  ..   Sample_Size = col_double(),
+  ..   Total = col_character(),
+  ..   `Age(years)` = col_character(),
+  ..   Education = col_character(),
+  ..   Gender = col_character(),
+  ..   Income = col_character(),
+  ..   `Race/Ethnicity` = col_character(),
+  ..   GeoLocation = col_character(),
+  ..   ClassID = col_character(),
+  ..   TopicID = col_character(),
+  ..   QuestionID = col_character(),
+  ..   DataValueTypeID = col_character(),
+  ..   LocationID = col_character(),
+  ..   StratificationCategory1 = col_character(),
+  ..   Stratification1 = col_character(),
+  ..   StratificationCategoryId1 = col_character(),
+  ..   StratificationID1 = col_character()
+  .. )
+ - attr(*, "problems")=&lt;externalptr&gt; </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check for missing values</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>missing_values <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(reduced_data))</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Number of missing values in the dataset:"</span>, missing_values, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Number of missing values in the dataset: 8310 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace missing values (if coded as 999) with NA</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>reduced_data <span class="ot">&lt;-</span> reduced_data <span class="sc">%&gt;%</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_all</span>(<span class="sc">~</span> <span class="fu">ifelse</span>(. <span class="sc">==</span> <span class="dv">999</span>, <span class="cn">NA</span>, .))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In order to view only a few variables in the data out of the 33 available, I decided that Class, Question, the data value attached to the question, education income and race/ethnicity were pertinent variables. Geographical location was kept as a separate viariable to analyze.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select a few variables for analysis (e.g., first 5 variables)</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>selected_variables <span class="ot">&lt;-</span> reduced_data <span class="sc">%&gt;%</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(LocationDesc, Class, Question, Data_Value, Education, Income, <span class="st">`</span><span class="at">Race/Ethnicity</span><span class="st">`</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Display summary statistics for selected variables</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(selected_variables)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> LocationDesc          Class             Question           Data_Value   
+ Length:1000        Length:1000        Length:1000        Min.   : 4.60  
+ Class :character   Class :character   Class :character   1st Qu.:24.12  
+ Mode  :character   Mode  :character   Mode  :character   Median :30.80  
+                                                          Mean   :31.02  
+                                                          3rd Qu.:36.48  
+                                                          Max.   :66.40  
+                                                          NA's   :98     
+  Education            Income          Race/Ethnicity    
+ Length:1000        Length:1000        Length:1000       
+ Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character  
+                                                         
+                                                         
+                                                         
+                                                         </code></pre>
+</div>
+</div>
+<p>To explore the data further, I ran code to assess the distribution of categorical variables below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform exploratory analysis</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary table for categorical variables with percentages</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>categorical_summary <span class="ot">&lt;-</span> reduced_data <span class="sc">%&gt;%</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">LocationDesc_percent =</span> <span class="fu">n_distinct</span>(LocationDesc) <span class="sc">/</span> <span class="fu">n</span>() <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">Class_percent =</span> <span class="fu">n_distinct</span>(Class) <span class="sc">/</span> <span class="fu">n</span>() <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">Question_percent =</span> <span class="fu">n_distinct</span>(Question) <span class="sc">/</span> <span class="fu">n</span>() <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">Education_percent =</span> <span class="fu">n_distinct</span>(Education) <span class="sc">/</span> <span class="fu">n</span>() <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">Income_percent =</span> <span class="fu">n_distinct</span>(Income) <span class="sc">/</span> <span class="fu">n</span>() <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">Race_Ethnicity_percent =</span> <span class="fu">n_distinct</span>(<span class="st">`</span><span class="at">Race/Ethnicity</span><span class="st">`</span>) <span class="sc">/</span> <span class="fu">n</span>() <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary statistics for continuous variable</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>continuous_summary <span class="ot">&lt;-</span> reduced_data <span class="sc">%&gt;%</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">Data_Value_mean =</span> <span class="fu">mean</span>(Data_Value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">Data_Value_sd =</span> <span class="fu">sd</span>(Data_Value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Print summary tables</span></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Summary Table for Categorical Variables:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Summary Table for Categorical Variables:"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(categorical_summary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 6
+  LocationDesc_percent Class_percent Question_percent Education_percent
+                 &lt;dbl&gt;         &lt;dbl&gt;            &lt;dbl&gt;             &lt;dbl&gt;
+1                  5.5           0.3              0.9               0.5
+# ℹ 2 more variables: Income_percent &lt;dbl&gt;, Race_Ethnicity_percent &lt;dbl&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Summary Table for Continuous Variables:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Summary Table for Continuous Variables:"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(continuous_summary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 2
+  Data_Value_mean Data_Value_sd
+            &lt;dbl&gt;         &lt;dbl&gt;
+1            31.0          10.2</code></pre>
+</div>
+</div>
+<p>Here, I created a plot to show the ditribution of data by physical activity class and filtered out the question “Percent engaging in no leisure-time physical activity” to look at the distibution of data within this class and question.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>physical_activity_data <span class="ot">&lt;-</span> reduced_data <span class="sc">%&gt;%</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Class <span class="sc">==</span> <span class="st">"Physical Activity"</span>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>physical_activity_no_leisure_data <span class="ot">&lt;-</span> reduced_data <span class="sc">%&gt;%</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Class <span class="sc">==</span> <span class="st">"Physical Activity"</span> <span class="sc">&amp;</span> </span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>         Question <span class="sc">==</span> <span class="st">"Percent of adults who engage in no leisure-time physical activity"</span>)</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary table for categorical variables</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>categorical_summary <span class="ot">&lt;-</span> physical_activity_no_leisure_data <span class="sc">%&gt;%</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">c</span>(LocationDesc, Education, Income, <span class="st">`</span><span class="at">Race/Ethnicity</span><span class="st">`</span>), <span class="sc">~</span><span class="fu">round</span>(<span class="fu">mean</span>(.)<span class="sc">*</span><span class="dv">100</span>, <span class="dv">2</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">LocationDesc_Percentage =</span> LocationDesc,</span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">Education_Percentage =</span> Education,</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>         <span class="at">Income_Percentage =</span> Income,</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>         <span class="at">Race_Ethnicity_Percentage =</span> <span class="st">`</span><span class="at">Race/Ethnicity</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: There were 4 warnings in `summarise()`.
+The first warning was:
+ℹ In argument: `across(...)`.
+Caused by warning in `mean.default()`:
+! argument is not numeric or logical: returning NA
+ℹ Run `dplyr::last_dplyr_warnings()` to see the 3 remaining warnings.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Summary of Categorical Variables:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Summary of Categorical Variables:"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(categorical_summary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 4
+  LocationDesc_Percentage Education_Percentage Income_Percentage
+                    &lt;dbl&gt;                &lt;dbl&gt;             &lt;dbl&gt;
+1                      NA                   NA                NA
+# ℹ 1 more variable: Race_Ethnicity_Percentage &lt;dbl&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Histogram and summary statistics for the continuous variable Data_Value</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(physical_activity_no_leisure_data, <span class="fu">aes</span>(<span class="at">x =</span> Data_Value)) <span class="sc">+</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">5</span>, <span class="at">fill =</span> <span class="st">"skyblue"</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of Percentages of Adults</span><span class="sc">\n</span><span class="st">Engaging in No Leisure-Time Physical Activity"</span>,</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Percentage of Adults"</span>,</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Frequency"</span>) <span class="sc">+</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 21 rows containing non-finite values (`stat_bin()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="cdcdata-exercise_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>mean_data_value <span class="ot">&lt;-</span> <span class="fu">mean</span>(physical_activity_no_leisure_data<span class="sc">$</span>Data_Value)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>sd_data_value <span class="ot">&lt;-</span> <span class="fu">sd</span>(physical_activity_no_leisure_data<span class="sc">$</span>Data_Value)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Summary of Continuous Variable (Data_Value):"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Summary of Continuous Variable (Data_Value):"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Mean:"</span>, <span class="fu">round</span>(mean_data_value, <span class="dv">2</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Mean: NA"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Standard Deviation:"</span>, <span class="fu">round</span>(sd_data_value, <span class="dv">2</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Standard Deviation: NA"</code></pre>
+</div>
+</div>
+<section id="this-section-was-contributed-by-erick-mollinedo" class="level2">
+<h2 class="anchored" data-anchor-id="this-section-was-contributed-by-erick-mollinedo">This section was contributed by Erick Mollinedo</h2>
+<section id="creating-the-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="creating-the-dataset">Creating the dataset</h3>
+<p>For this part I only used the following packages:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ lubridate 1.9.3     ✔ tibble    3.2.1
+✔ purrr     1.0.2     ✔ tidyr     1.3.0
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gtsummary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>I am assuming that the cleaned dataset is listed as <code>selected_variables</code>. The summaries of all the variables (except the <code>Data_Value</code> variable) were not clear, since there were a lot of NAs, so I decided to produce a summary of the unclear variables. This part summarizes all the values from each categorical variable.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co">#List all the values of the `Location_Desc` variable, using `unique()` and list them ascending using `sort()`</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(selected_variables<span class="sc">$</span>LocationDesc) <span class="sc">%&gt;%</span> <span class="fu">sort</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Alabama"              "Alaska"               "Arizona"             
+ [4] "Arkansas"             "California"           "Colorado"            
+ [7] "Connecticut"          "Delaware"             "District of Columbia"
+[10] "Florida"              "Georgia"              "Guam"                
+[13] "Hawaii"               "Idaho"                "Illinois"            
+[16] "Indiana"              "Iowa"                 "Kansas"              
+[19] "Kentucky"             "Louisiana"            "Maine"               
+[22] "Maryland"             "Massachusetts"        "Michigan"            
+[25] "Minnesota"            "Mississippi"          "Missouri"            
+[28] "Montana"              "National"             "Nebraska"            
+[31] "Nevada"               "New Hampshire"        "New Jersey"          
+[34] "New Mexico"           "New York"             "North Carolina"      
+[37] "North Dakota"         "Ohio"                 "Oklahoma"            
+[40] "Oregon"               "Pennsylvania"         "Puerto Rico"         
+[43] "Rhode Island"         "South Carolina"       "South Dakota"        
+[46] "Tennessee"            "Texas"                "Utah"                
+[49] "Vermont"              "Virgin Islands"       "Virginia"            
+[52] "Washington"           "West Virginia"        "Wisconsin"           
+[55] "Wyoming"             </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co">#List all the values of the `Class` variable, using `unique()` and list them ascending using `sort()`</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(selected_variables<span class="sc">$</span>Class) <span class="sc">%&gt;%</span> <span class="fu">sort</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Fruits and Vegetables"   "Obesity / Weight Status"
+[3] "Physical Activity"      </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co">#List all the values of the `Question` variable, using `unique()` and list them ascending using `sort()`</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(selected_variables<span class="sc">$</span>Question) <span class="sc">%&gt;%</span> <span class="fu">sort</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Percent of adults aged 18 years and older who have an overweight classification"                                                                                                                                                                      
+[2] "Percent of adults aged 18 years and older who have obesity"                                                                                                                                                                                           
+[3] "Percent of adults who achieve at least 150 minutes a week of moderate-intensity aerobic physical activity or 75 minutes a week of vigorous-intensity aerobic activity (or an equivalent combination)"                                                 
+[4] "Percent of adults who achieve at least 150 minutes a week of moderate-intensity aerobic physical activity or 75 minutes a week of vigorous-intensity aerobic physical activity and engage in muscle-strengthening activities on 2 or more days a week"
+[5] "Percent of adults who achieve at least 300 minutes a week of moderate-intensity aerobic physical activity or 150 minutes a week of vigorous-intensity aerobic activity (or an equivalent combination)"                                                
+[6] "Percent of adults who engage in muscle-strengthening activities on 2 or more days a week"                                                                                                                                                             
+[7] "Percent of adults who engage in no leisure-time physical activity"                                                                                                                                                                                    
+[8] "Percent of adults who report consuming fruit less than one time daily"                                                                                                                                                                                
+[9] "Percent of adults who report consuming vegetables less than one time daily"                                                                                                                                                                           </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co">#List all the values of the `Education` variable, using `unique()` and list them ascending using `sort()`</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(selected_variables<span class="sc">$</span>Education) <span class="sc">%&gt;%</span> <span class="fu">sort</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "College graduate"                 "High school graduate"            
+[3] "Less than high school"            "Some college or technical school"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co">#List all the values of the `Income` variable, using `unique()` and list them ascending using `sort()`</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(selected_variables<span class="sc">$</span>Income) <span class="sc">%&gt;%</span> <span class="fu">sort</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "$15,000 - $24,999"  "$25,000 - $34,999"  "$35,000 - $49,999" 
+[4] "$50,000 - $74,999"  "$75,000 or greater" "Data not reported" 
+[7] "Less than $15,000" </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co">#List all the values of the `Race/Ethnicity` variable, using `unique()` and list them ascending using `sort()`</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(selected_variables<span class="sc">$</span><span class="st">`</span><span class="at">Race/Ethnicity</span><span class="st">`</span>) <span class="sc">%&gt;%</span> <span class="fu">sort</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "2 or more races"               "American Indian/Alaska Native"
+[3] "Asian"                         "Hawaiian/Pacific Islander"    
+[5] "Hispanic"                      "Non-Hispanic Black"           
+[7] "Non-Hispanic White"            "Other"                        </code></pre>
+</div>
+</div>
+<p>Now, estimating the percent of each value per each variable, using the <code>table()</code> and <code>prop.table()</code> functions.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co">#`Location_Desc`</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>freq_location <span class="ot">&lt;-</span> <span class="fu">table</span>(selected_variables<span class="sc">$</span>LocationDesc)</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>percent_location <span class="ot">&lt;-</span> <span class="fu">prop.table</span>(freq_location) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(percent_location)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+             Alabama               Alaska              Arizona 
+                 2.2                  2.1                  2.0 
+            Arkansas           California             Colorado 
+                 1.4                  2.2                  1.9 
+         Connecticut             Delaware District of Columbia 
+                 2.1                  2.0                  1.9 
+             Florida              Georgia                 Guam 
+                 1.7                  2.7                  1.2 
+              Hawaii                Idaho             Illinois 
+                 1.7                  2.9                  2.5 
+             Indiana                 Iowa               Kansas 
+                 1.3                  1.5                  1.2 
+            Kentucky            Louisiana                Maine 
+                 1.7                  2.4                  2.4 
+            Maryland        Massachusetts             Michigan 
+                 1.6                  2.4                  2.7 
+           Minnesota          Mississippi             Missouri 
+                 2.0                  1.6                  2.1 
+             Montana             National             Nebraska 
+                 1.3                  1.6                  1.2 
+              Nevada        New Hampshire           New Jersey 
+                 1.1                  2.7                  1.6 
+          New Mexico             New York       North Carolina 
+                 2.2                  1.2                  0.9 
+        North Dakota                 Ohio             Oklahoma 
+                 2.5                  2.1                  1.8 
+              Oregon         Pennsylvania          Puerto Rico 
+                 2.3                  2.7                  1.2 
+        Rhode Island       South Carolina         South Dakota 
+                 1.8                  1.0                  1.9 
+           Tennessee                Texas                 Utah 
+                 2.3                  2.1                  1.6 
+             Vermont       Virgin Islands             Virginia 
+                 1.8                  0.6                  1.4 
+          Washington        West Virginia            Wisconsin 
+                 1.0                  1.1                  1.8 
+             Wyoming 
+                 1.8 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co">#`Class`</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>freq_class <span class="ot">&lt;-</span> <span class="fu">table</span>(selected_variables<span class="sc">$</span>Class)</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>percent_class <span class="ot">&lt;-</span> <span class="fu">prop.table</span>(freq_class) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(percent_class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  Fruits and Vegetables Obesity / Weight Status       Physical Activity 
+                    8.9                    36.5                    54.6 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co">#`Question`</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>freq_question <span class="ot">&lt;-</span> <span class="fu">table</span>(selected_variables<span class="sc">$</span>Question)</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>percent_question <span class="ot">&lt;-</span> <span class="fu">prop.table</span>(freq_question) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(percent_question)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+                                                                                                                                                                      Percent of adults aged 18 years and older who have an overweight classification 
+                                                                                                                                                                                                                                                 19.2 
+                                                                                                                                                                                           Percent of adults aged 18 years and older who have obesity 
+                                                                                                                                                                                                                                                 17.3 
+                                                 Percent of adults who achieve at least 150 minutes a week of moderate-intensity aerobic physical activity or 75 minutes a week of vigorous-intensity aerobic activity (or an equivalent combination) 
+                                                                                                                                                                                                                                                  8.4 
+Percent of adults who achieve at least 150 minutes a week of moderate-intensity aerobic physical activity or 75 minutes a week of vigorous-intensity aerobic physical activity and engage in muscle-strengthening activities on 2 or more days a week 
+                                                                                                                                                                                                                                                  9.6 
+                                                Percent of adults who achieve at least 300 minutes a week of moderate-intensity aerobic physical activity or 150 minutes a week of vigorous-intensity aerobic activity (or an equivalent combination) 
+                                                                                                                                                                                                                                                  8.9 
+                                                                                                                                                             Percent of adults who engage in muscle-strengthening activities on 2 or more days a week 
+                                                                                                                                                                                                                                                  8.8 
+                                                                                                                                                                                    Percent of adults who engage in no leisure-time physical activity 
+                                                                                                                                                                                                                                                 18.9 
+                                                                                                                                                                                Percent of adults who report consuming fruit less than one time daily 
+                                                                                                                                                                                                                                                  3.5 
+                                                                                                                                                                           Percent of adults who report consuming vegetables less than one time daily 
+                                                                                                                                                                                                                                                  5.4 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co">#`Education`</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>freq_education <span class="ot">&lt;-</span> <span class="fu">table</span>(selected_variables<span class="sc">$</span>Education)</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>percent_education <span class="ot">&lt;-</span> <span class="fu">prop.table</span>(freq_education) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(percent_education)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+                College graduate             High school graduate 
+                        29.45205                         21.23288 
+           Less than high school Some college or technical school 
+                        25.34247                         23.97260 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co">#`Income`</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>freq_income <span class="ot">&lt;-</span> <span class="fu">table</span>(selected_variables<span class="sc">$</span>Income)</span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>percent_income <span class="ot">&lt;-</span> <span class="fu">prop.table</span>(freq_income) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(percent_income)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ $15,000 - $24,999  $25,000 - $34,999  $35,000 - $49,999  $50,000 - $74,999 
+          13.07692           15.00000           15.00000           13.46154 
+$75,000 or greater  Data not reported  Less than $15,000 
+          13.07692           13.46154           16.92308 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co">#`Race/Ethnicity`</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>freq_race <span class="ot">&lt;-</span> <span class="fu">table</span>(selected_variables<span class="sc">$</span><span class="st">`</span><span class="at">Race/Ethnicity</span><span class="st">`</span>)</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>percent_race <span class="ot">&lt;-</span> <span class="fu">prop.table</span>(freq_race) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(percent_race)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+              2 or more races American Indian/Alaska Native 
+                     15.30612                      12.92517 
+                        Asian     Hawaiian/Pacific Islander 
+                     11.90476                      13.26531 
+                     Hispanic            Non-Hispanic Black 
+                     11.56463                      12.24490 
+           Non-Hispanic White                         Other 
+                     11.90476                      10.88435 </code></pre>
+</div>
+</div>
+<p>First, I set a seed for reproducibility and then I defined the number of observations for this dataset</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Defined 60 as the number of observations (n=60 wildland firefighters)</span></span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>n_behavior <span class="ot">&lt;-</span> <span class="dv">1000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Here, creating the empty data frame <code>behavior_data</code> with the seven previously explored variables.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>behavior_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Location_Desc =</span> <span class="fu">character</span>(n_behavior),</span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Class =</span> <span class="fu">character</span>(n_behavior),</span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Question =</span> <span class="fu">character</span>(n_behavior),</span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Data_Value =</span> <span class="fu">numeric</span>(n_behavior),</span>
+<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Education =</span> <span class="fu">character</span>(n_behavior),</span>
+<span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Income =</span> <span class="fu">character</span>(n_behavior),</span>
+<span id="cb68-8"><a href="#cb68-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">Race/Ethnicity</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">character</span>(n_behavior)</span>
+<span id="cb68-9"><a href="#cb68-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>And here I fill each variable with their respective values</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co">#`Location_Desc`: First I created a list from all unique locations seen above.</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>unique_location <span class="ot">&lt;-</span> <span class="fu">unique</span>(selected_variables<span class="sc">$</span>LocationDesc)</span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>unique_location_list <span class="ot">&lt;-</span> <span class="fu">as.list</span>(unique_location)</span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a><span class="co">#And then estimating the probability for each value</span></span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a>prob_location <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> <span class="fu">length</span>(unique_location_list)</span>
+<span id="cb69-7"><a href="#cb69-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-8"><a href="#cb69-8" aria-hidden="true" tabindex="-1"></a><span class="co">#Then I created the variable, estimating the probability for each location to be similar for each location</span></span>
+<span id="cb69-9"><a href="#cb69-9" aria-hidden="true" tabindex="-1"></a>behavior_data<span class="sc">$</span>Location_Desc <span class="ot">&lt;-</span> <span class="fu">map_chr</span>(<span class="fu">sample</span>(unique_location_list, n_behavior, <span class="at">replace =</span> T, <span class="at">prob =</span> <span class="fu">rep</span>(prob_location, <span class="fu">length</span>(unique_location_list))), as.character)</span>
+<span id="cb69-10"><a href="#cb69-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-11"><a href="#cb69-11" aria-hidden="true" tabindex="-1"></a><span class="co">#`Class`:</span></span>
+<span id="cb69-12"><a href="#cb69-12" aria-hidden="true" tabindex="-1"></a>behavior_data<span class="sc">$</span>Class <span class="ot">&lt;-</span> <span class="fu">map_chr</span>(<span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"Fruits and Vegetables"</span>, <span class="st">"Obesity/Weight Status"</span>, <span class="st">"Physical Activity"</span>), n_behavior, <span class="at">replace =</span> T, <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.09</span>, <span class="fl">0.36</span>, <span class="fl">0.55</span>)), as.character)</span>
+<span id="cb69-13"><a href="#cb69-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-14"><a href="#cb69-14" aria-hidden="true" tabindex="-1"></a><span class="co">#`Question`: For this variable I also used the same steps from the `Location_Des` variable</span></span>
+<span id="cb69-15"><a href="#cb69-15" aria-hidden="true" tabindex="-1"></a>unique_question <span class="ot">&lt;-</span> <span class="fu">unique</span>(selected_variables<span class="sc">$</span>Question)</span>
+<span id="cb69-16"><a href="#cb69-16" aria-hidden="true" tabindex="-1"></a>unique_question_list <span class="ot">&lt;-</span> <span class="fu">as.list</span>(unique_question)</span>
+<span id="cb69-17"><a href="#cb69-17" aria-hidden="true" tabindex="-1"></a>prob_question <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> <span class="fu">length</span>(unique_question_list)</span>
+<span id="cb69-18"><a href="#cb69-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-19"><a href="#cb69-19" aria-hidden="true" tabindex="-1"></a>behavior_data<span class="sc">$</span>Question <span class="ot">&lt;-</span> <span class="fu">map_chr</span>(<span class="fu">sample</span>(unique_question_list, n_behavior, <span class="at">replace =</span> T, <span class="at">prob =</span> <span class="fu">rep</span>(prob_question, <span class="fu">length</span>(unique_question_list))), as.character)</span>
+<span id="cb69-20"><a href="#cb69-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-21"><a href="#cb69-21" aria-hidden="true" tabindex="-1"></a><span class="co">#`Data_Value`: Setting the mean and SD.</span></span>
+<span id="cb69-22"><a href="#cb69-22" aria-hidden="true" tabindex="-1"></a>behavior_data<span class="sc">$</span>Data_Value <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">rnorm</span>(n_behavior, <span class="at">mean =</span> <span class="fl">31.0163</span>, <span class="at">sd =</span> <span class="fl">10.15591</span>), <span class="dv">1</span>)</span>
+<span id="cb69-23"><a href="#cb69-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-24"><a href="#cb69-24" aria-hidden="true" tabindex="-1"></a><span class="co">#`Education`: Reflecting the approximate percent for each value</span></span>
+<span id="cb69-25"><a href="#cb69-25" aria-hidden="true" tabindex="-1"></a>behavior_data<span class="sc">$</span>Education <span class="ot">&lt;-</span> <span class="fu">map_chr</span>(<span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"College graduate"</span>, <span class="st">"High school graduate"</span>, <span class="st">"Less than high school"</span>, <span class="st">"Some college or technical school"</span>), n_behavior, <span class="at">replace =</span> T, <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.30</span>, <span class="fl">0.21</span>, <span class="fl">0.25</span>, <span class="fl">0.24</span>)), as.character)</span>
+<span id="cb69-26"><a href="#cb69-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-27"><a href="#cb69-27" aria-hidden="true" tabindex="-1"></a><span class="co">#`Income`: Reflecting the approximate percent for each value</span></span>
+<span id="cb69-28"><a href="#cb69-28" aria-hidden="true" tabindex="-1"></a>behavior_data<span class="sc">$</span>Income <span class="ot">&lt;-</span> <span class="fu">map_chr</span>(<span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"$15,000 - $24,999"</span>, <span class="st">"$25,000 - $34,999"</span>, <span class="st">"$35,000 - $49,999"</span>, <span class="st">"$50,000 - $74,999"</span>, <span class="st">"$75,000 or greater"</span>, <span class="st">"Data not reported"</span>, <span class="st">"Less than $15,000"</span>), n_behavior, <span class="at">replace =</span> T, <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.13</span>, <span class="fl">0.15</span>, <span class="fl">0.15</span>, <span class="fl">0.13</span>, <span class="fl">0.13</span>, <span class="fl">0.14</span>, <span class="fl">0.17</span>)), as.character)</span>
+<span id="cb69-29"><a href="#cb69-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-30"><a href="#cb69-30" aria-hidden="true" tabindex="-1"></a><span class="co">#`Race/Ethnicity`: Also reflecting the most accurate probabilities for each value</span></span>
+<span id="cb69-31"><a href="#cb69-31" aria-hidden="true" tabindex="-1"></a>behavior_data<span class="sc">$</span>Race.Ethnicity <span class="ot">&lt;-</span> <span class="fu">map_chr</span>(<span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"2 or more races"</span>, <span class="st">"American Indian/Alaska Native"</span>, <span class="st">"Asian"</span>, <span class="st">"Hawaiian/Pacific Islander"</span>, <span class="st">"Hispanic"</span>, <span class="st">"Non-Hispanic Black"</span>, <span class="st">"Non-Hispanic White"</span>, <span class="st">"Other"</span>), n_behavior, <span class="at">replace =</span> T, <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.15</span>, <span class="fl">0.13</span>, <span class="fl">0.12</span>, <span class="fl">0.13</span>, <span class="fl">0.12</span>, <span class="fl">0.12</span>, <span class="fl">0.12</span>, <span class="fl">0.11</span>)), as.character)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The dataframe is ready to do the summarization/exploration.</p>
+</section>
+<section id="data-explorationsummarization" class="level3">
+<h3 class="anchored" data-anchor-id="data-explorationsummarization">Data exploration/summarization</h3>
+<p>First I summarized the <code>Data_Value</code> variable using a barplot to observe where the average values are located. Then, producinga a summary of the mean, median, min, max and the IQR.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Using `ggplot()` and `geom_histogram()` to plot the values of `Data_Value`</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(behavior_data, <span class="fu">aes</span>(<span class="at">x=</span> Data_Value))<span class="sc">+</span></span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()<span class="sc">+</span></span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="cdcdata-exercise_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Produce a summary of the new dataframe using the `summary()` function</span></span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(behavior_data<span class="sc">$</span>Data_Value)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   0.10   24.40   30.70   30.99   37.90   64.40 </code></pre>
+</div>
+</div>
+<p>Based on the plot and the summary, it looks like this variable was correctly recreated. However, there are some missing values from the original dataset and these were not considered.</p>
+<p>Now I produced a table that summarizes the other 6 categorical variables.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Using the `tbl_summary()` function to produce a frequency summary of the 6 categorical variables from the cleaned dataset</span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>cat_summary <span class="ot">&lt;-</span> behavior_data <span class="sc">%&gt;%</span> </span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Location_Desc, Class, Question, Education, Income, Race.Ethnicity) <span class="sc">%&gt;%</span> </span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_summary</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bold_labels</span>()</span>
+<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb74-7"><a href="#cb74-7" aria-hidden="true" tabindex="-1"></a>cat_summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div id="reabxkydkm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#reabxkydkm table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#reabxkydkm thead, #reabxkydkm tbody, #reabxkydkm tfoot, #reabxkydkm tr, #reabxkydkm td, #reabxkydkm th {
+  border-style: none;
+}
+
+#reabxkydkm p {
+  margin: 0;
+  padding: 0;
+}
+
+#reabxkydkm .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#reabxkydkm .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#reabxkydkm .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#reabxkydkm .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#reabxkydkm .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#reabxkydkm .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#reabxkydkm .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#reabxkydkm .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#reabxkydkm .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#reabxkydkm .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#reabxkydkm .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#reabxkydkm .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#reabxkydkm .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#reabxkydkm .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#reabxkydkm .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#reabxkydkm .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#reabxkydkm .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#reabxkydkm .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#reabxkydkm .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#reabxkydkm .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#reabxkydkm .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#reabxkydkm .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#reabxkydkm .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#reabxkydkm .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#reabxkydkm .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#reabxkydkm .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#reabxkydkm .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#reabxkydkm .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#reabxkydkm .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#reabxkydkm .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#reabxkydkm .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#reabxkydkm .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#reabxkydkm .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#reabxkydkm .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#reabxkydkm .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#reabxkydkm .gt_left {
+  text-align: left;
+}
+
+#reabxkydkm .gt_center {
+  text-align: center;
+}
+
+#reabxkydkm .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#reabxkydkm .gt_font_normal {
+  font-weight: normal;
+}
+
+#reabxkydkm .gt_font_bold {
+  font-weight: bold;
+}
+
+#reabxkydkm .gt_font_italic {
+  font-style: italic;
+}
+
+#reabxkydkm .gt_super {
+  font-size: 65%;
+}
+
+#reabxkydkm .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#reabxkydkm .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#reabxkydkm .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#reabxkydkm .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#reabxkydkm .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#reabxkydkm .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#reabxkydkm .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="<strong>Characteristic</strong>"><strong>Characteristic</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>N = 1,000</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>N = 1,000</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="label" class="gt_row gt_left" style="font-weight: bold;">Location_Desc</td>
+<td headers="stat_0" class="gt_row gt_center"><br></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Alabama</td>
+<td headers="stat_0" class="gt_row gt_center">25 (2.5%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Alaska</td>
+<td headers="stat_0" class="gt_row gt_center">16 (1.6%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Arizona</td>
+<td headers="stat_0" class="gt_row gt_center">13 (1.3%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Arkansas</td>
+<td headers="stat_0" class="gt_row gt_center">20 (2.0%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;California</td>
+<td headers="stat_0" class="gt_row gt_center">15 (1.5%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Colorado</td>
+<td headers="stat_0" class="gt_row gt_center">18 (1.8%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Connecticut</td>
+<td headers="stat_0" class="gt_row gt_center">20 (2.0%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Delaware</td>
+<td headers="stat_0" class="gt_row gt_center">13 (1.3%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;District of Columbia</td>
+<td headers="stat_0" class="gt_row gt_center">25 (2.5%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Florida</td>
+<td headers="stat_0" class="gt_row gt_center">17 (1.7%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Georgia</td>
+<td headers="stat_0" class="gt_row gt_center">19 (1.9%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Guam</td>
+<td headers="stat_0" class="gt_row gt_center">20 (2.0%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Hawaii</td>
+<td headers="stat_0" class="gt_row gt_center">15 (1.5%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Idaho</td>
+<td headers="stat_0" class="gt_row gt_center">19 (1.9%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Illinois</td>
+<td headers="stat_0" class="gt_row gt_center">18 (1.8%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Indiana</td>
+<td headers="stat_0" class="gt_row gt_center">26 (2.6%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Iowa</td>
+<td headers="stat_0" class="gt_row gt_center">19 (1.9%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Kansas</td>
+<td headers="stat_0" class="gt_row gt_center">16 (1.6%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Kentucky</td>
+<td headers="stat_0" class="gt_row gt_center">12 (1.2%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Louisiana</td>
+<td headers="stat_0" class="gt_row gt_center">16 (1.6%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Maine</td>
+<td headers="stat_0" class="gt_row gt_center">20 (2.0%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Maryland</td>
+<td headers="stat_0" class="gt_row gt_center">24 (2.4%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Massachusetts</td>
+<td headers="stat_0" class="gt_row gt_center">21 (2.1%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Michigan</td>
+<td headers="stat_0" class="gt_row gt_center">12 (1.2%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Minnesota</td>
+<td headers="stat_0" class="gt_row gt_center">23 (2.3%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Mississippi</td>
+<td headers="stat_0" class="gt_row gt_center">19 (1.9%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Missouri</td>
+<td headers="stat_0" class="gt_row gt_center">21 (2.1%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Montana</td>
+<td headers="stat_0" class="gt_row gt_center">17 (1.7%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;National</td>
+<td headers="stat_0" class="gt_row gt_center">22 (2.2%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Nebraska</td>
+<td headers="stat_0" class="gt_row gt_center">18 (1.8%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Nevada</td>
+<td headers="stat_0" class="gt_row gt_center">15 (1.5%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;New Hampshire</td>
+<td headers="stat_0" class="gt_row gt_center">15 (1.5%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;New Jersey</td>
+<td headers="stat_0" class="gt_row gt_center">21 (2.1%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;New Mexico</td>
+<td headers="stat_0" class="gt_row gt_center">17 (1.7%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;New York</td>
+<td headers="stat_0" class="gt_row gt_center">10 (1.0%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;North Carolina</td>
+<td headers="stat_0" class="gt_row gt_center">21 (2.1%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;North Dakota</td>
+<td headers="stat_0" class="gt_row gt_center">17 (1.7%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Ohio</td>
+<td headers="stat_0" class="gt_row gt_center">14 (1.4%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Oklahoma</td>
+<td headers="stat_0" class="gt_row gt_center">18 (1.8%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Oregon</td>
+<td headers="stat_0" class="gt_row gt_center">25 (2.5%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Pennsylvania</td>
+<td headers="stat_0" class="gt_row gt_center">16 (1.6%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Puerto Rico</td>
+<td headers="stat_0" class="gt_row gt_center">20 (2.0%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Rhode Island</td>
+<td headers="stat_0" class="gt_row gt_center">10 (1.0%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;South Carolina</td>
+<td headers="stat_0" class="gt_row gt_center">18 (1.8%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;South Dakota</td>
+<td headers="stat_0" class="gt_row gt_center">16 (1.6%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Tennessee</td>
+<td headers="stat_0" class="gt_row gt_center">23 (2.3%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Texas</td>
+<td headers="stat_0" class="gt_row gt_center">23 (2.3%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Utah</td>
+<td headers="stat_0" class="gt_row gt_center">22 (2.2%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Vermont</td>
+<td headers="stat_0" class="gt_row gt_center">21 (2.1%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Virgin Islands</td>
+<td headers="stat_0" class="gt_row gt_center">18 (1.8%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Virginia</td>
+<td headers="stat_0" class="gt_row gt_center">17 (1.7%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Washington</td>
+<td headers="stat_0" class="gt_row gt_center">19 (1.9%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;West Virginia</td>
+<td headers="stat_0" class="gt_row gt_center">10 (1.0%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Wisconsin</td>
+<td headers="stat_0" class="gt_row gt_center">19 (1.9%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Wyoming</td>
+<td headers="stat_0" class="gt_row gt_center">16 (1.6%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left" style="font-weight: bold;">Class</td>
+<td headers="stat_0" class="gt_row gt_center"><br></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Fruits and Vegetables</td>
+<td headers="stat_0" class="gt_row gt_center">83 (8.3%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Obesity/Weight Status</td>
+<td headers="stat_0" class="gt_row gt_center">367 (37%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Physical Activity</td>
+<td headers="stat_0" class="gt_row gt_center">550 (55%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left" style="font-weight: bold;">Question</td>
+<td headers="stat_0" class="gt_row gt_center"><br></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Percent of adults aged 18 years and older who have an overweight classification</td>
+<td headers="stat_0" class="gt_row gt_center">99 (9.9%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Percent of adults aged 18 years and older who have obesity</td>
+<td headers="stat_0" class="gt_row gt_center">125 (13%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Percent of adults who achieve at least 150 minutes a week of moderate-intensity aerobic physical activity or 75 minutes a week of vigorous-intensity aerobic activity (or an equivalent combination)</td>
+<td headers="stat_0" class="gt_row gt_center">105 (11%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Percent of adults who achieve at least 150 minutes a week of moderate-intensity aerobic physical activity or 75 minutes a week of vigorous-intensity aerobic physical activity and engage in muscle-strengthening activities on 2 or more days a week</td>
+<td headers="stat_0" class="gt_row gt_center">114 (11%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Percent of adults who achieve at least 300 minutes a week of moderate-intensity aerobic physical activity or 150 minutes a week of vigorous-intensity aerobic activity (or an equivalent combination)</td>
+<td headers="stat_0" class="gt_row gt_center">113 (11%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Percent of adults who engage in muscle-strengthening activities on 2 or more days a week</td>
+<td headers="stat_0" class="gt_row gt_center">98 (9.8%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Percent of adults who engage in no leisure-time physical activity</td>
+<td headers="stat_0" class="gt_row gt_center">115 (12%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Percent of adults who report consuming fruit less than one time daily</td>
+<td headers="stat_0" class="gt_row gt_center">123 (12%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Percent of adults who report consuming vegetables less than one time daily</td>
+<td headers="stat_0" class="gt_row gt_center">108 (11%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left" style="font-weight: bold;">Education</td>
+<td headers="stat_0" class="gt_row gt_center"><br></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;College graduate</td>
+<td headers="stat_0" class="gt_row gt_center">287 (29%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;High school graduate</td>
+<td headers="stat_0" class="gt_row gt_center">221 (22%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Less than high school</td>
+<td headers="stat_0" class="gt_row gt_center">277 (28%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Some college or technical school</td>
+<td headers="stat_0" class="gt_row gt_center">215 (22%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left" style="font-weight: bold;">Income</td>
+<td headers="stat_0" class="gt_row gt_center"><br></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;$15,000 - $24,999</td>
+<td headers="stat_0" class="gt_row gt_center">116 (12%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;$25,000 - $34,999</td>
+<td headers="stat_0" class="gt_row gt_center">170 (17%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;$35,000 - $49,999</td>
+<td headers="stat_0" class="gt_row gt_center">150 (15%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;$50,000 - $74,999</td>
+<td headers="stat_0" class="gt_row gt_center">128 (13%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;$75,000 or greater</td>
+<td headers="stat_0" class="gt_row gt_center">136 (14%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Data not reported</td>
+<td headers="stat_0" class="gt_row gt_center">138 (14%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Less than $15,000</td>
+<td headers="stat_0" class="gt_row gt_center">162 (16%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left" style="font-weight: bold;">Race.Ethnicity</td>
+<td headers="stat_0" class="gt_row gt_center"><br></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;2 or more races</td>
+<td headers="stat_0" class="gt_row gt_center">145 (15%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;American Indian/Alaska Native</td>
+<td headers="stat_0" class="gt_row gt_center">130 (13%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Asian</td>
+<td headers="stat_0" class="gt_row gt_center">121 (12%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Hawaiian/Pacific Islander</td>
+<td headers="stat_0" class="gt_row gt_center">137 (14%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Hispanic</td>
+<td headers="stat_0" class="gt_row gt_center">113 (11%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Non-Hispanic Black</td>
+<td headers="stat_0" class="gt_row gt_center">119 (12%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Non-Hispanic White</td>
+<td headers="stat_0" class="gt_row gt_center">126 (13%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;Other</td>
+<td headers="stat_0" class="gt_row gt_center">109 (11%)</td></tr>
+  </tbody>
+  
+  <tfoot class="gt_footnotes">
+    <tr>
+      <td class="gt_footnote" colspan="2"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> n (%)</td>
+    </tr>
+  </tfoot>
+</table>
+</div>
+</div>
+</div>
+<p>Based on the table above it is seen that the percentage for each value for each category is what it was expected.</p>
+<p>Although the synthetic data (<code>behavior_data</code>) is very similar to the original <code>selected_variables</code> dataset, it is missing the NA values. Another line of code would be necessary to include the percentage of NAs in the <code>Data_Value</code>, <code>Education</code>, <code>Income</code> and <code>Race.Ethnicity</code> variables.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
