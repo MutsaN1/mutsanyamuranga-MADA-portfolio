@@ -5,6 +5,7 @@ editor:
     wrap: 72
 ---
 
+
 # Introduction
 
 For this exercise, I will be conducting an analysis of synthetic data
@@ -23,6 +24,7 @@ additional edits to suit my needs.
 
 I will start out by loading the necessary packages.
 
+
 ```{r}
 # Load required packages
 library(dplyr)
@@ -31,6 +33,7 @@ library(tidyr)
 # Set seed for reproducibility
 set.seed(123)
 ```
+
 
 Adding the set seed ensure the data to be reproduced in random number
 generation.
@@ -56,6 +59,7 @@ drug concentrations correlate with CRP levels.
 Adverse heart events (Heart Attack) are captured throughout the cohort.
 Assume that higher drug concentrations correlate with decreased risk of
 a heart attack.
+
 
 ```{r}
 # Function to generate drug concentration based on exponential decay
@@ -88,7 +92,9 @@ generate_heart_attack_events <- function(drug_concentration) {
 }
 ```
 
+
 # Creating Data
+
 
 ```{r}
 # Set parameters
@@ -101,7 +107,7 @@ study_days <- 365
 time_points <- seq(0, study_days, by = 2)
 
 # Create data frame
-syn_data <- expand.grid(
+data <- expand.grid(
   Patient_ID = 1:N,
   Age = age,
   Treatment_Group = treatment_groups,
@@ -121,8 +127,9 @@ syn_data <- expand.grid(
 
 ```{r}
 # Print the first few rows of the data frame
-head(syn_data)
+head(data)
 ```
+
 
 # Data Plots of Various Associations
 
@@ -130,12 +137,13 @@ I added code to plot the association between drug dosage and cholesterol
 level, dosage and CRP level, and dosage and survival plot for a heart
 attack event.
 
+
 ```{r}
 # Load required package
 library(ggplot2)
 
 # Plot the association between drug dosage and cholesterol level
-ggplot(syn_data, aes(x = Dose, y = Cholesterol_Level, color = Treatment_Group)) +
+ggplot(data, aes(x = Dose, y = Cholesterol_Level, color = Treatment_Group)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   labs(title = "Association between Drug Dosage and Cholesterol Level",
@@ -143,7 +151,7 @@ ggplot(syn_data, aes(x = Dose, y = Cholesterol_Level, color = Treatment_Group)) 
        y = "Cholesterol Level")
 
 # Plot the association between drug dosage and CRP level
-ggplot(syn_data, aes(x = Dose, y = CRP_Level, color = Treatment_Group)) +
+ggplot(data, aes(x = Dose, y = CRP_Level, color = Treatment_Group)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   labs(title = "Association between Drug Dosage and CRP Level",
@@ -152,13 +160,14 @@ ggplot(syn_data, aes(x = Dose, y = CRP_Level, color = Treatment_Group)) +
 
 # Plot the survival plot for heart attack events
 # Assuming the study period is 365 days, adjust as needed
-ggplot(syn_data, aes(x = Time, y = 1 - Heart_Attack, color = Treatment_Group)) +
+ggplot(data, aes(x = Time, y = 1 - Heart_Attack, color = Treatment_Group)) +
   geom_step() +
   labs(title = "Survival Plot for Heart Attack Events",
        x = "Time (Days)",
        y = "Survival Probability",
        color = "Treatment Group")
 ```
+
 
 # Modeling
 
@@ -167,19 +176,20 @@ association between drug dosage and cholesterol level, dosage and crp
 level, and dosage vs a heart attack event. A multiple linear model for
 all variables vs heart attack was included
 
+
 ```{r}
 # Fit simple linear regression model for drug dosage and cholesterol level
-model_cholesterol <- lm(Cholesterol_Level ~ Dose, data = syn_data)
+model_cholesterol <- lm(Cholesterol_Level ~ Dose, data = data)
 
 # Fit simple linear regression model for drug dosage and CRP level
-model_crp <- lm(CRP_Level ~ Dose, data = syn_data)
+model_crp <- lm(CRP_Level ~ Dose, data = data)
 
 # Fit simple logistic regression model for drug dosage and heart attack event
-model_heart_attack <- glm(Heart_Attack ~ Dose, data = syn_data, family = "binomial")
+model_heart_attack <- glm(Heart_Attack ~ Dose, data = data, family = "binomial")
 
 # Fit multiple linear regression model for all variables vs heart attack
 model_multiple <- glm(Heart_Attack ~ Dose + Age + Treatment_Group + Drug_Concentration + Cholesterol_Level + CRP_Level, 
-                      data = syn_data, family = "binomial")
+                      data = data, family = "binomial")
 
 # Display summaries of the models
 summary(model_cholesterol)
@@ -187,6 +197,7 @@ summary(model_crp)
 summary(model_heart_attack)
 summary(model_multiple)
 ```
+
 
 # Conclusion
 
@@ -220,3 +231,4 @@ suggesting that higher drug concentrations are associated with a lower
 risk of a heart attack. Other predictors (Dose, Age, Treatment_Group,
 Cholesterol_Level, CRP_Level) do not have significant effects on the
 log-odds.
+
