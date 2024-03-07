@@ -1,0 +1,343 @@
+---
+title: "Fitting Exercise"
+editor: 
+  markdown: 
+    wrap: 72
+editor_options: 
+  chunk_output_type: console
+---
+
+# Introduction
+
+For this assignment, I will be using data on a drug candidate called
+Mavoglurant from the paper:
+
+Wendling, T., Dumitras, S., Ogungbenro, K. et al. Application of a
+Bayesian approach to physiological modelling of mavoglurant population
+pharmacokinetics. J Pharmacokinet Pharmacodyn 42, 639–657 (2015).
+https://doi.org/10.1007/s10928-015-9430-4
+
+## Loading
+
+First we will load the data and additional packages necessary for the
+assigniment.
+
+```{r}
+# Installing package of data
+library(nlmixr2data)
+
+# Installing additional packages
+library(here)
+library(tidyr)
+library(ggplot2)
+library(readxl)
+```
+
+I will also load the data from the another paper which has used this
+data to ensure a level of consistency and ease of usage with the data.
+
+```{r}
+# Loading Data through CSV
+mavodrug <-- read.csv('Mavoglurant_A2121_nmpk.csv')
+```
+
+# Exploring and Processing
+
+```{r}
+# Change all values in the entire data frame to positive
+mavodrug <- abs(mavodrug)
+
+# Check column names
+colnames(mavodrug)
+
+# Check data types
+str(mavodrug)
+```
+
+This is time-series data of drug concentrations. So for further
+exploration, we will consider time as the independent variable. To
+visualilze the data, We will plot the outcome variable (DV) as a
+function of time, stratified by DOSE and using ID as a grouping factor.
+
+```{r}
+# Plotting Outcome Variable
+
+# Convert DOSE and ID to factors if they are not already
+mavodrug$DOSE <- factor(mavodrug$DOSE)
+mavodrug$ID <- factor(mavodrug$ID)
+
+# Plotting
+ggplot(mavodrug, aes(x = TIME, y = DV, color = DOSE, group = ID)) +
+  geom_line() +
+  labs(title = "DV over time stratified by dose and ID",
+       x = "Time",
+       y = "DV") +
+  scale_color_manual(values = c("red", "green", "blue")) +
+  theme_minimal()
+```
+
+There are some individuals that have received the drug more than once,
+indicated by having both entries with OCC=1 and OCC=2. To keep things
+simple, I only keep one dataset for each individual and remove all
+entries with OCC=2.
+
+```{r}
+# Checking unique values in the 'OCC' column
+unique(mavodrug$OCC)
+
+# Filter observations with OCC = 1
+mavodrug <- mavodrug[mavodrug$OCC == 1, ]
+
+# Check the structure of the data frame after filtering
+str(mavodrug)
+```
+
+Here, I will compute the total amount of drug for each individual (for
+exercise purposes only, not used in normal practices).
+
+```{r}
+library(dplyr)
+
+# Exclude observations with TIME = 0
+mavodrug_filtered <- mavodrug %>%
+  filter(TIME != 0)
+
+# Compute the sum of the DV variable for each individual
+summarized_mavo <- mavodrug_filtered %>%
+  group_by(ID) %>%
+  summarize(Y = sum(DV))
+
+# Create a data frame containing only the observations where TIME == 0
+time_0_mavo <- mavodrug %>%
+  filter(TIME == 0)
+
+# Use the appropriate join function to combine the two data frames
+combined_mavo <- inner_join(summarized_mavo, time_0_mavo, by = "ID")
+
+# Check the dimensions of the resulting data frame
+dim(time_0_mavo)
+dim(combined_mavo)
+```
+
+```{r}
+# Convert RACE and SEX to factor variables
+combined_mavo <- combined_mavo %>%
+  mutate(RACE = factor(RACE),
+         SEX = factor(SEX))
+
+# Select only the specified variables and check the structure
+cleaned_mavo <- combined_mavo %>%
+  select(Y, DOSE, AGE, SEX, RACE, WT, HT)
+
+# Check the structure of the cleaned data
+str(cleaned_mavo)
+```
+
+## Summary Tables
+
+The summary tables provide a quick overview of the numerical and
+categorical variables in the dataset.
+
+```{r}
+# Summary table for numerical variables
+summary_table_numeric <- summary(cleaned_mavo[, c("Y", "AGE", "WT", "HT")])
+
+# Summary table for categorical variables
+summary_table_categorical <- table(cleaned_mavo$DOSE, cleaned_mavo$SEX)
+
+# Print summary tables
+print("Summary table for numerical variables:")
+print(summary_table_numeric)
+
+print("Summary table for categorical variables:")
+print(summary_table_categorical)
+```
+
+## Plots
+
+These plots show the relationship between the total drug ('Y') and other
+predictors such as age, dose, and sex. Scatterplots help visualize the
+continuous relationship between 'Y' and age, while boxplots illustrate
+the distribution of 'Y' across different levels of dose and sex.
+
+```{r}
+# Scatterplot of Y vs. AGE
+plot(Y ~ AGE, data = cleaned_mavo, main = "Total Drug vs. Age", xlab = "Age", ylab = "Total Drug")
+
+# Boxplot of Y by DOSE
+boxplot(Y ~ DOSE, data = cleaned_mavo, main = "Total Drug by Dose", xlab = "Dose", ylab = "Total Drug")
+
+# Boxplot of Y by SEX
+boxplot(Y ~ SEX, data = cleaned_mavo, main = "Total Drug by Sex", xlab = "Sex", ylab = "Total Drug")
+```
+
+## Distributions of Variables
+
+These histograms visualize the distributions of variables such as total
+drug ('Y'), age, weight ('WT'), and height ('HT'). They help identify
+any potential outliers or unusual patterns in the data.
+
+```{r}
+# Histogram of Y
+hist(cleaned_mavo$Y, main = "Distribution of Total Drug", xlab = "Total Drug")
+
+# Histogram of AGE
+hist(cleaned_mavo$AGE, main = "Distribution of Age", xlab = "Age")
+
+# Histogram of WT
+hist(cleaned_mavo$WT, main = "Distribution of Weight", xlab = "Weight")
+
+# Histogram of HT
+hist(cleaned_mavo$HT, main = "Distribution of Height", xlab = "Height")
+```
+
+## Pair/Correlation Plots
+
+The pair plot provides a visual overview of the relationships between
+the variables 'Y', age, weight, and height. The correlation matrix
+quantifies the strength and direction of the linear relationships
+between these variables. It helps identify potential multicollinearity
+issues and informs feature selection for modeling purposes.
+
+```{r}
+# Pair plot
+pairs(cleaned_mavo[, c("Y", "AGE", "WT", "HT")])
+
+# Correlation matrix
+correlation_matrix <- cor(cleaned_mavo[, c("Y", "AGE", "WT", "HT")])
+print("Correlation matrix:")
+print(correlation_matrix)
+```
+
+# Model Fitting
+
+Here, I conduct a model fitting to assess the relationship of the
+outcome of interest with the other variables. Tidymodels provides the
+functions necessary for modeling and preprocessing data. The recipe
+function specifies the data preprocessing steps. In this case, the
+outcome variable (Y) is defined as the response variable, and all other
+variables are considered predictors. step_dummy converts categorical
+predictors into dummy variables, step_center centers numeric predictors
+around their mean, and step_scale scales numeric predictors to have unit
+variance.
+
+```{r}
+# Load necessary libraries
+library(tidymodels)
+# Helper packages
+library(readr)       # for importing data
+library(broom.mixed) # for converting bayesian models to tidy tibbles
+library(dotwhisker)  # for visualizing regression results
+library(tidymodels)
+
+# Define the recipe
+mavo_recipe <- recipe(Y ~ ., data = cleaned_mavo) %>%
+  step_dummy(all_nominal(), -all_outcomes()) %>%
+  step_center(all_predictors()) %>%
+  step_scale(all_predictors())
+```
+
+The initial_split function divides the dataset into training and testing
+sets. The prop argument specifies the proportion of the data to allocate
+to the training set (80% in this case), and the strata argument ensures
+that the split is stratified based on the outcome variable (Y), which
+helps maintain the balance of categories in both sets.
+
+The linear_reg function specifies the linear regression model.
+set_engine("lm") selects the linear model engine (ordinary least squares
+regression), and set_mode("regression") sets the mode of the model to
+regression, indicating that it predicts a continuous outcome (Y).
+
+The workflow function creates a modeling workflow. This workflow
+combines the preprocessing steps defined in the recipe with the
+specified model. The add_recipe function adds the recipe to the
+workflow, and the add_model function adds the linear regression model.
+
+```{r}
+# Split the data into training and testing sets
+set.seed(123) # for reproducibility
+mavo_split <- initial_split(cleaned_mavo, prop = 0.8, strata = Y)
+mavo_train <- training(mavo_split)
+mavo_test <- testing(mavo_split)
+
+# Define the linear regression model specification
+linear_spec <- linear_reg() %>%
+  set_engine("lm") %>%
+  set_mode("regression")
+
+# Create a workflow that incorporates the recipe and the model
+mavo_workflow <- workflow() %>%
+  add_recipe(mavo_recipe) %>%
+  add_model(linear_spec)
+```
+
+The fit function fits the workflow to the training data. This step
+applies the preprocessing steps defined in the recipe to the training
+data and then fits the linear regression model to the preprocessed data.
+
+The predict function generates predictions from the fitted model using
+the testing data. This step applies the preprocessing steps (from the
+recipe) to the testing data and then predicts the outcome variable (Y)
+using the fitted linear regression model.
+
+The metrics function computes evaluation metrics for the model
+predictions. Here, we calculate the root mean squared error (RMSE) and
+the R-squared value to assess the model's performance. The computed
+metrics are then extracted and stored in the variables all_rmse and
+all_r_squared, respectively.
+
+```{r}
+# Fit the workflow to the training data
+mavo_fit <- fit(mavo_workflow, data = mavo_train)
+
+# Compute predictions on the testing data
+mavo_predictions <- predict(mavo_fit, new_data = mavo_test) %>%
+  bind_cols(mavo_test)
+```
+
+The metrics function computes evaluation metrics for the model
+predictions. Here, we calculate the root mean squared error (RMSE) and
+the R-squared value to assess the model's performance. The computed
+metrics are then extracted and stored in the variables all_rmse and
+all_r_squared, respectively.
+
+```{r}
+# Compute RMSE and R-squared for the model using all predictors
+all_metrics <- mavo_predictions %>%
+  metrics(truth = Y, estimate = .pred)
+
+all_rmse <- all_metrics %>%
+  filter(.metric == "rmse") %>%
+  pull(.estimate)
+
+all_r_squared <- all_metrics %>%
+  filter(.metric == "rsq") %>%
+  pull(.estimate)
+```
+
+Finally, we print the computed RMSE and R-squared values to evaluate the
+model's performance. These metrics provide insights into how well the
+linear regression model fits the data and predicts the outcome variable.
+
+```{r}
+# Print RMSE and R-squared for the model using all predictors
+cat("Model using all predictors:\n")
+cat("RMSE:", all_rmse, "\n")
+cat("R-squared:", all_r_squared, "\n")
+print(mavo_predictions)
+print(mavo_fit)
+```
+
+# Results
+
+The RMSE is approximately 672.59. Lower values of RMSE indicate better
+model performance, as they imply smaller errors between predicted and
+actual values. The R-squared value is approximately 0.47, suggesting
+that the model explains about 47% of the variance in the outcome
+variable. The intercept term is 2459.86, representing the predicted
+value of Y when all predictors are set to zero. The coefficient for AGE
+is 52.83, indicating that for each one-unit increase in age, the
+predicted value of Y increases by 52.83 units. Finally, coefficients for
+other predictors (WT, HT, DOSE, SEX, RACE) represent the change in the
+predicted value of Y associated with a one-unit change in each
+respective predictor.

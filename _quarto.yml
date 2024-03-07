@@ -22,7 +22,9 @@ website:
             file: syntheticdata-exercise/syntheticdata-exercise.qmd
           - text: "Data Analysis Exercise"
             file: cdcdata-exercise/cdcdata-exercise.qmd
-
+          - text: "Fitting Exercise"
+            file: fitting-exercise/fitting-exercise.qmd
+            
     right:
       - icon: github 
         href: https://github.com/MutsaN1/mutsanyamuranga-MADA-portfolio.git        
@@ -32,5 +34,4 @@ format:
     theme: solar
     highlight: zenburn
     css: styles.css
-    toc: FALSE
-    output-dir: "/mutsanyamuranga-MADA-portfolio"
+    toc: false

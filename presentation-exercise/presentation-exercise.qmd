@@ -455,7 +455,4 @@ ft <- bg(ft, part = "header", bg = "white")
 
 border <- fp_border_default()
 vline(ft, j = c('Country', 'Elo in 2015'), border = border, part = "all")
-
-# Display the flextable
-ft
 ```
