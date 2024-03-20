@@ -1,0 +1,44 @@
+[
+  {
+    "objectID": "fitting-exercise/fitting-exercise.html",
+    "href": "fitting-exercise/fitting-exercise.html",
+    "title": "Fitting Exercise",
+    "section": "",
+    "text": "For this assignment, I will be using data on a drug candidate called Mavoglurant from the paper:\nWendling, T., Dumitras, S., Ogungbenro, K. et al. Application of a Bayesian approach to physiological modelling of mavoglurant population pharmacokinetics. J Pharmacokinet Pharmacodyn 42, 639–657 (2015). https://doi.org/10.1007/s10928-015-9430-4\n\n\nFirst we will load the data and additional packages necessary for the assigniment.\n\n# Installing package of data\nlibrary(nlmixr2data)\n\n# Installing additional packages\nlibrary(here)\n\nhere() starts at /Users/mutsa_n/Desktop/MADA-course/mutsanyamuranga-MADA-portfolio\n\nlibrary(tidyr)\nlibrary(ggplot2)\nlibrary(readxl)\n\nI will also load the data from the another paper which has used this data to ensure a level of consistency and ease of usage with the data.\n\n# Loading Data through CSV\nmavodrug &lt;-- read.csv('Mavoglurant_A2121_nmpk.csv')"
+  },
+  {
+    "objectID": "fitting-exercise/fitting-exercise.html#loading",
+    "href": "fitting-exercise/fitting-exercise.html#loading",
+    "title": "Fitting Exercise",
+    "section": "",
+    "text": "First we will load the data and additional packages necessary for the assigniment.\n\n# Installing package of data\nlibrary(nlmixr2data)\n\n# Installing additional packages\nlibrary(here)\n\nhere() starts at /Users/mutsa_n/Desktop/MADA-course/mutsanyamuranga-MADA-portfolio\n\nlibrary(tidyr)\nlibrary(ggplot2)\nlibrary(readxl)\n\nI will also load the data from the another paper which has used this data to ensure a level of consistency and ease of usage with the data.\n\n# Loading Data through CSV\nmavodrug &lt;-- read.csv('Mavoglurant_A2121_nmpk.csv')"
+  },
+  {
+    "objectID": "fitting-exercise/fitting-exercise.html#summary-tables",
+    "href": "fitting-exercise/fitting-exercise.html#summary-tables",
+    "title": "Fitting Exercise",
+    "section": "Summary Tables",
+    "text": "Summary Tables\nThe summary tables provide a quick overview of the numerical and categorical variables in the dataset.\n\n# Summary table for numerical variables\nsummary_table_numeric &lt;- summary(cleaned_mavo[, c(\"Y\", \"AGE\", \"WT\", \"HT\")])\n\n# Summary table for categorical variables\nsummary_table_categorical &lt;- table(cleaned_mavo$DOSE, cleaned_mavo$SEX)\n\n# Print summary tables\nprint(\"Summary table for numerical variables:\")\n\n[1] \"Summary table for numerical variables:\"\n\nprint(summary_table_numeric)\n\n       Y               AGE              WT               HT       \n Min.   : 826.4   Min.   :18.00   Min.   : 56.60   Min.   :1.520  \n 1st Qu.:1700.5   1st Qu.:26.00   1st Qu.: 73.17   1st Qu.:1.700  \n Median :2349.1   Median :31.00   Median : 82.10   Median :1.770  \n Mean   :2445.4   Mean   :33.00   Mean   : 82.55   Mean   :1.759  \n 3rd Qu.:3050.2   3rd Qu.:40.25   3rd Qu.: 90.10   3rd Qu.:1.813  \n Max.   :5606.6   Max.   :50.00   Max.   :115.30   Max.   :1.930  \n\nprint(\"Summary table for categorical variables:\")\n\n[1] \"Summary table for categorical variables:\"\n\nprint(summary_table_categorical)\n\n      \n        1  2\n  25   49 10\n  37.5 10  2\n  50   45  4"
+  },
+  {
+    "objectID": "fitting-exercise/fitting-exercise.html#plots",
+    "href": "fitting-exercise/fitting-exercise.html#plots",
+    "title": "Fitting Exercise",
+    "section": "Plots",
+    "text": "Plots\nThese plots show the relationship between the total drug (‘Y’) and other predictors such as age, dose, and sex. Scatterplots help visualize the continuous relationship between ‘Y’ and age, while boxplots illustrate the distribution of ‘Y’ across different levels of dose and sex.\n\n# Scatterplot of Y vs. AGE\nplot(Y ~ AGE, data = cleaned_mavo, main = \"Total Drug vs. Age\", xlab = \"Age\", ylab = \"Total Drug\")\n\n\n\n# Boxplot of Y by DOSE\nboxplot(Y ~ DOSE, data = cleaned_mavo, main = \"Total Drug by Dose\", xlab = \"Dose\", ylab = \"Total Drug\")\n\n\n\n# Boxplot of Y by SEX\nboxplot(Y ~ SEX, data = cleaned_mavo, main = \"Total Drug by Sex\", xlab = \"Sex\", ylab = \"Total Drug\")"
+  },
+  {
+    "objectID": "fitting-exercise/fitting-exercise.html#distributions-of-variables",
+    "href": "fitting-exercise/fitting-exercise.html#distributions-of-variables",
+    "title": "Fitting Exercise",
+    "section": "Distributions of Variables",
+    "text": "Distributions of Variables\nThese histograms visualize the distributions of variables such as total drug (‘Y’), age, weight (‘WT’), and height (‘HT’). They help identify any potential outliers or unusual patterns in the data.\n\n# Histogram of Y\nhist(cleaned_mavo$Y, main = \"Distribution of Total Drug\", xlab = \"Total Drug\")\n\n\n\n# Histogram of AGE\nhist(cleaned_mavo$AGE, main = \"Distribution of Age\", xlab = \"Age\")\n\n\n\n# Histogram of WT\nhist(cleaned_mavo$WT, main = \"Distribution of Weight\", xlab = \"Weight\")\n\n\n\n# Histogram of HT\nhist(cleaned_mavo$HT, main = \"Distribution of Height\", xlab = \"Height\")"
+  },
+  {
+    "objectID": "fitting-exercise/fitting-exercise.html#paircorrelation-plots",
+    "href": "fitting-exercise/fitting-exercise.html#paircorrelation-plots",
+    "title": "Fitting Exercise",
+    "section": "Pair/Correlation Plots",
+    "text": "Pair/Correlation Plots\nThe pair plot provides a visual overview of the relationships between the variables ‘Y’, age, weight, and height. The correlation matrix quantifies the strength and direction of the linear relationships between these variables. It helps identify potential multicollinearity issues and informs feature selection for modeling purposes.\n\n# Pair plot\npairs(cleaned_mavo[, c(\"Y\", \"AGE\", \"WT\", \"HT\")])\n\n\n\n# Correlation matrix\ncorrelation_matrix &lt;- cor(cleaned_mavo[, c(\"Y\", \"AGE\", \"WT\", \"HT\")])\nprint(\"Correlation matrix:\")\n\n[1] \"Correlation matrix:\"\n\nprint(correlation_matrix)\n\n              Y         AGE         WT         HT\nY    1.00000000  0.01256372 -0.2128719 -0.1583297\nAGE  0.01256372  1.00000000  0.1196740 -0.3518581\nWT  -0.21287194  0.11967399  1.0000000  0.5997505\nHT  -0.15832972 -0.35185806  0.5997505  1.0000000"
+  }
+]

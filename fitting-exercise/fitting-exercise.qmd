@@ -23,14 +23,15 @@ First we will load the data and additional packages necessary for the
 assigniment.
 
 ```{r}
-# Installing package of data
-library(nlmixr2data)
-
-# Installing additional packages
-library(here)
-library(tidyr)
-library(ggplot2)
-library(readxl)
+library(readr) #for loading Excel files
+library(dplyr) #for data processing/cleaning
+library(tidyr) #for data processing/cleaning
+library(skimr) #for nice visualization of data 
+library(here) #to set paths
+library(ggplot2) # for plots
+library(gtsummary)# for summary tables
+library(patchwork) #for combine plots
+library(tidymodels)
 ```
 
 I will also load the data from the another paper which has used this
@@ -39,19 +40,14 @@ data to ensure a level of consistency and ease of usage with the data.
 ```{r}
 # Loading Data through CSV
 mavodrug <-- read.csv('Mavoglurant_A2121_nmpk.csv')
+mavodrug <- abs(mavodrug)
 ```
 
 # Exploring and Processing
 
 ```{r}
-# Change all values in the entire data frame to positive
-mavodrug <- abs(mavodrug)
-
-# Check column names
-colnames(mavodrug)
-
-# Check data types
-str(mavodrug)
+#summary(rawdata)
+skimr::skim(mavodrug)
 ```
 
 This is time-series data of drug concentrations. So for further
@@ -62,18 +58,11 @@ function of time, stratified by DOSE and using ID as a grouping factor.
 ```{r}
 # Plotting Outcome Variable
 
-# Convert DOSE and ID to factors if they are not already
-mavodrug$DOSE <- factor(mavodrug$DOSE)
-mavodrug$ID <- factor(mavodrug$ID)
-
-# Plotting
-ggplot(mavodrug, aes(x = TIME, y = DV, color = DOSE, group = ID)) +
-  geom_line() +
-  labs(title = "DV over time stratified by dose and ID",
-       x = "Time",
-       y = "DV") +
-  scale_color_manual(values = c("red", "green", "blue")) +
-  theme_minimal()
+# Plotting Outcome Variable
+mavoplot1<- mavodrug %>% ggplot()+
+      geom_line(aes(x= TIME, y=DV, group = as.factor(ID), color= as.factor(DOSE))) +
+      facet_wrap(~DOSE, scales = "free_y")
+mavoplot1
 ```
 
 There are some individuals that have received the drug more than once,
@@ -86,20 +75,23 @@ entries with OCC=2.
 unique(mavodrug$OCC)
 
 # Filter observations with OCC = 1
-mavodrug <- mavodrug[mavodrug$OCC == 1, ]
+mavodrug_clean <- mavodrug[mavodrug$OCC == 1, ]
 
 # Check the structure of the data frame after filtering
-str(mavodrug)
+str(mavodrug_clean)
+
+mavoplot1.1<- mavodrug_clean %>% ggplot()+
+    geom_line(aes(x= TIME, y=DV, group = as.factor(ID), color= as.factor(DOSE))) +
+      facet_wrap(~DOSE, scales = "free_y")
+mavoplot1.1
 ```
 
 Here, I will compute the total amount of drug for each individual (for
 exercise purposes only, not used in normal practices).
 
 ```{r}
-library(dplyr)
-
 # Exclude observations with TIME = 0
-mavodrug_filtered <- mavodrug %>%
+mavodrug_filtered <- mavodrug_clean %>%
   filter(TIME != 0)
 
 # Compute the sum of the DV variable for each individual
@@ -108,7 +100,7 @@ summarized_mavo <- mavodrug_filtered %>%
   summarize(Y = sum(DV))
 
 # Create a data frame containing only the observations where TIME == 0
-time_0_mavo <- mavodrug %>%
+time_0_mavo <- mavodrug_clean %>%
   filter(TIME == 0)
 
 # Use the appropriate join function to combine the two data frames
@@ -120,17 +112,16 @@ dim(combined_mavo)
 ```
 
 ```{r}
-# Convert RACE and SEX to factor variables
-combined_mavo <- combined_mavo %>%
-  mutate(RACE = factor(RACE),
-         SEX = factor(SEX))
-
 # Select only the specified variables and check the structure
 cleaned_mavo <- combined_mavo %>%
-  select(Y, DOSE, AGE, SEX, RACE, WT, HT)
+  select(Y, DOSE, AGE, SEX, WT, HT) %>%
+  #converting SEX as factors
+  mutate(across(c(SEX), as.factor))
+
+readr::write_rds(cleaned_mavo, "mavoglurant.rds")
 
 # Check the structure of the cleaned data
-str(cleaned_mavo)
+skimr::skim(cleaned_mavo)
 ```
 
 ## Summary Tables
@@ -139,18 +130,24 @@ The summary tables provide a quick overview of the numerical and
 categorical variables in the dataset.
 
 ```{r}
-# Summary table for numerical variables
-summary_table_numeric <- summary(cleaned_mavo[, c("Y", "AGE", "WT", "HT")])
+mavotable1 <- tbl_summary(
+  cleaned_mavo,
+  by = DOSE, # Stratify summary by DOSE
+  type = list(
+    DOSE ~ "categorical", #Specifying DOSE as categorical
+    SEX ~ "categorical",  #Specifying SES as categorical
+    Y ~ "continuous2",
+    AGE ~ "continuous2",
+    WT ~ "continuous2",
+    HT ~ "continuous2"
+  ),
+  statistic = list(
+    all_continuous() ~ c("{mean} ({sd})", "{min}, {max}"), # Statistics for continuous variables
+    all_categorical() ~ "{n} ({p}%)"), # Statistics for categorical variables
+  missing = "no" # Option to exclude missing data in summary
+)
 
-# Summary table for categorical variables
-summary_table_categorical <- table(cleaned_mavo$DOSE, cleaned_mavo$SEX)
-
-# Print summary tables
-print("Summary table for numerical variables:")
-print(summary_table_numeric)
-
-print("Summary table for categorical variables:")
-print(summary_table_categorical)
+mavotable1
 ```
 
 ## Plots
@@ -161,15 +158,75 @@ continuous relationship between 'Y' and age, while boxplots illustrate
 the distribution of 'Y' across different levels of dose and sex.
 
 ```{r}
-# Scatterplot of Y vs. AGE
-plot(Y ~ AGE, data = cleaned_mavo, main = "Total Drug vs. Age", xlab = "Age", ylab = "Total Drug")
+mavoplot2 <- cleaned_mavo %>%
+  mutate(DOSE = as.factor(DOSE)) %>% # Convert DOSE to factor here
+  ggplot(aes(x = AGE, y = Y, group = DOSE, col = DOSE)) +
+  geom_point() + 
+  geom_smooth(method = lm, se = FALSE) + # Add a linear regression line
+  scale_color_viridis_d(option = "plasma", end = .7)+
+  labs(title = "Scatterplot of Y vs. AGE", x = "Age", y = "Total Drug (Y)") +
+  theme_minimal()
+mavoplot2
 
-# Boxplot of Y by DOSE
-boxplot(Y ~ DOSE, data = cleaned_mavo, main = "Total Drug by Dose", xlab = "Dose", ylab = "Total Drug")
+mavoplot3 <- cleaned_mavo %>%
+  mutate(DOSE = as.factor(DOSE)) %>% # Convert DOSE to factor here
+  ggplot(aes(x = HT, y = Y, group = DOSE, col = DOSE)) +
+  geom_point() + 
+  geom_smooth(method = lm, se = FALSE) + # Add a linear regression line
+  scale_color_viridis_d(option = "inferno", end = .7)+
+  labs(title = "Scatterplot of Y vs. HT", x = "HT", y = "Total Drug (Y)") +
+  theme_minimal()
+mavoplot3
 
-# Boxplot of Y by SEX
-boxplot(Y ~ SEX, data = cleaned_mavo, main = "Total Drug by Sex", xlab = "Sex", ylab = "Total Drug")
+mavoplot4<-cleaned_mavo %>%
+  mutate(DOSE = as.factor(DOSE)) %>% # Convert DOSE to factor here
+  ggplot(aes(x = WT, y = Y, group = DOSE, col = DOSE)) +
+  geom_point() + 
+  geom_smooth(method = lm, se = FALSE) + # Add a linear regression line
+  scale_color_viridis_d(option = "magma", end = .7)+
+  labs(title = "Scatterplot of Y vs. WT", x = "WT", y = "Total Drug (Y)") +
+  theme_minimal()
+mavoplot4
+
+mavoplot5 <- cleaned_mavo %>%
+  mutate(DOSE = as.factor(DOSE)) %>% # Converting DOSE to factor only for the plot
+  ggplot(aes(x = DOSE, y = Y, fill = DOSE)) + 
+  geom_boxplot() + 
+  labs(title = "Distribution of Y by DOSE", x = "DOSE", y = "Y") +
+  theme_minimal()
+mavoplot5
+
+mavoplot6 <- cleaned_mavo %>%
+  mutate(DOSE = as.factor(DOSE)) %>% # Convert DOSE to factor here
+  select(DOSE, SEX) %>%
+  pivot_longer(everything(), names_to = "name", values_to = "value") %>%
+  mutate(name = factor(name, levels = c("DOSE", "SEX"))) %>%
+  ggplot(aes(x = value, fill = name)) +
+  geom_bar(alpha = 0.5, color = "black") +
+  facet_wrap(~name, scales = "free") +
+  scale_fill_manual(values = c("DOSE" = "lightgreen", "SEX" = "salmon"))
+mavoplot6
+
+#Saving the figure in the folder
+mavoplot2_file <- here("fitting-exercise", "YxAgexDose.png")
+ggsave(filename = mavoplot2_file, plot=mavoplot2, bg="white")
+
+
+mavoplot3_file <- here("fitting-exercise", "YxHTxDose.png")
+ggsave(filename = mavoplot3_file, plot=mavoplot3, bg="white")
+
+
+mavoplot4_file <- here("fitting-exercise", "YxWTxDose.png")
+ggsave(filename = mavoplot4_file, plot=mavoplot4, bg="white")
+
+mavoplot5_file <- here("fitting-exercise", "factorplots.png")
+ggsave(filename = mavoplot5_file, plot=mavoplot5, bg="white")
+
+
+mavoplot6_file <- here("fitting-exercise", "YxDose.png")
+ggsave(filename = mavoplot6_file, plot=mavoplot6, bg="white")
 ```
+
 
 ## Distributions of Variables
 
@@ -178,17 +235,21 @@ drug ('Y'), age, weight ('WT'), and height ('HT'). They help identify
 any potential outliers or unusual patterns in the data.
 
 ```{r}
-# Histogram of Y
-hist(cleaned_mavo$Y, main = "Distribution of Total Drug", xlab = "Total Drug")
+mavohist1 <-
+  cleaned_mavo %>%
+  select(Y, AGE, WT, HT) %>%
+  pivot_longer(everything()) %>%
+  mutate(name = factor(name, levels = c("Y", "AGE", "WT", "HT"))) %>%  #Keeps the order of plot
+  ggplot(aes(x = value, fill = name)) +
+  geom_histogram(alpha = 0.5, color="black") +
+  facet_wrap(~name, scales = "free") +
+  scale_fill_manual(values = c("Y" = "green", "AGE" = "blue", "WT" = "grey", "HT" = "salmon")) +
+  theme_minimal()
+mavohist1
 
-# Histogram of AGE
-hist(cleaned_mavo$AGE, main = "Distribution of Age", xlab = "Age")
-
-# Histogram of WT
-hist(cleaned_mavo$WT, main = "Distribution of Weight", xlab = "Weight")
-
-# Histogram of HT
-hist(cleaned_mavo$HT, main = "Distribution of Height", xlab = "Height")
+#Saving the figure in the folder
+mavohist1_file <- here("fitting-exercise", "histo_plots.png")
+ggsave(filename = mavohist1_file, plot=mavohist1, bg="white")
 ```
 
 ## Pair/Correlation Plots
@@ -200,13 +261,15 @@ between these variables. It helps identify potential multicollinearity
 issues and informs feature selection for modeling purposes.
 
 ```{r}
-# Pair plot
-pairs(cleaned_mavo[, c("Y", "AGE", "WT", "HT")])
+# Using the pairs function for selected variables
+mavo_matrix <- pairs(cleaned_mavo[, c("Y", "AGE", "WT", "HT")], 
+      main = "Pairwise Scatterplot Matrix")
 
-# Correlation matrix
-correlation_matrix <- cor(cleaned_mavo[, c("Y", "AGE", "WT", "HT")])
-print("Correlation matrix:")
-print(correlation_matrix)
+mavo_matrix
+
+#Saving the figure in the folder
+correl_file <- here("fitting-exercise", "pair_matrix.png")
+ggsave(filename = correl_file, plot=mavo_matrix, bg="white")
 ```
 
 # Model Fitting
@@ -324,20 +387,197 @@ linear regression model fits the data and predicts the outcome variable.
 cat("Model using all predictors:\n")
 cat("RMSE:", all_rmse, "\n")
 cat("R-squared:", all_r_squared, "\n")
-print(mavo_predictions)
-print(mavo_fit)
+
+mavo_predictions
+mavo_fit
 ```
 
-# Results
+## Results
 
-The RMSE is approximately 672.59. Lower values of RMSE indicate better
+The RMSE is approximately 654.5275. Lower values of RMSE indicate better
 model performance, as they imply smaller errors between predicted and
-actual values. The R-squared value is approximately 0.47, suggesting
-that the model explains about 47% of the variance in the outcome
-variable. The intercept term is 2459.86, representing the predicted
-value of Y when all predictors are set to zero. The coefficient for AGE
-is 52.83, indicating that for each one-unit increase in age, the
-predicted value of Y increases by 52.83 units. Finally, coefficients for
-other predictors (WT, HT, DOSE, SEX, RACE) represent the change in the
-predicted value of Y associated with a one-unit change in each
-respective predictor.
+actual values. The R-squared value is approximately 0.492, suggesting
+that the model explains about 49.2% of the variance in the outcome
+variable. 
+
+
+# Modeling Fitting 2
+
+The data is randomly splitted into 75% train and 25% test sets following the [Data Splitting sectoin of the get Started tidymodels tutorial](https://www.tidymodels.org/start/recipes/#data-split).Linear model is fitted on the training data. In later part of the exercise the model performance will be measured by applying it on the testing data.
+
+```{r}
+rngseed <- 1234
+```
+
+```{r}
+# Remove the "RACE" variable from dataset
+mavo2 <- subset(cleaned_mavo, select = c("Y", "DOSE", "AGE", "SEX", "WT", "HT"))
+```
+
+```{r}
+#setting the random seed for reproducibility
+set.seed(rngseed)
+
+#Assig 75% of the data into the training set
+mavodata_split <- initial_split(mavo2, prop = .75)
+
+#Create data frames for the train and test data
+mavo2train_data <- training(mavodata_split)
+mavo2test_data <- testing(mavodata_split)
+
+#Check data structure
+str(mavo2train_data)
+str(mavo2test_data)
+```
+
+## Linear Model
+
+Two linear models are fitted to the continuous outcome (Y) of the train data. The first uses only the main predictor of interest DOSE, and the second uses all predictors. A null model is also fitted.
+
+```{r}
+#For reproducibility
+set.seed(rngseed)
+
+#Using linear regression function from tidymodels.
+mavo2lin_mod <- linear_reg() %>% set_engine("lm") 
+
+#Fit Y on Dose
+mavlinfit_dose <- mavo2lin_mod%>%fit(Y ~ DOSE, data = mavo2train_data)
+
+#Fit Y on All variables in the data
+mavlinfit_all <- mavo2lin_mod%>%fit(Y~., data= mavo2train_data)
+
+# Fitting a null model using tidymodels' parsnip engine
+mavo2null_mod <- null_model() %>% set_engine("parsnip") %>% set_mode("regression")
+mavlinfit_null <- mavo2null_mod %>%
+  fit(Y ~ 1, data = mavo2train_data)
+
+#Use tidy for clean formatting of table
+tidy(mavlinfit_dose)
+tidy(mavlinfit_all)
+tidy(mavlinfit_null)
+```
+
+Both the first and second models indicate a positve relationship between Y and DOSE. Furthermore, the second model implies that even when considering the influence of other factors, Y shows a positive correlation with AGE and a negative correlation with both WT and HT. With all other factors held constant, a change in the SEX variable from 1 to 2 is expected to result in a decrease in Y.
+
+## Root Mean Square Error
+Subsequently, RMSE metrics are calculated for all models using the methods outlined by Dr. Handel for solving module 8 exercises.
+
+```{r}
+#| message: false
+#| warning: false
+#Computing the RMSE for model 1
+mavmetrics_dose <- mavlinfit_dose %>%
+  predict(mavo2train_data) %>%
+  bind_cols(mavo2train_data)%>%
+  metrics(truth=Y, estimate=.pred)
+
+#Computing the RMSE for model 2
+mavmetrics_all <- mavlinfit_all %>%
+  predict(mavo2train_data) %>%
+  bind_cols(mavo2train_data)%>%
+  metrics(truth=Y, estimate=.pred)
+
+#Computing the RMSE for model 3
+mavmetrics_null <- mavlinfit_null %>%
+  predict(mavo2train_data) %>%
+  bind_cols(mavo2train_data)%>%
+  metrics(truth=Y, estimate=.pred)
+
+
+#print the results
+print(mavmetrics_null)
+print(mavmetrics_dose)
+print(mavmetrics_all)
+```
+
+The RMSE values stand at 948, 702, and 627 for the null model, the model with only DOSE, and the model with all predictors, respectively. RMSE serves as a gauge for the average disparity between the model's predicted values and the actual data. A lower RMSE signifies a superior fit to the data. Consequently, based on the RMSE metrics, the linear model comprising all predictor variables demonstrates superior performance compared to the other two models.
+
+## Cross-Validation
+Following that, the model performance is evaluated using the cross-validation technique employing 10 folds for the two main models. This technique involves dividing the training data into 10 subsets and iteratively using 9 of them for model fitting while reserving the remaining 10% for evaluation. This process is repeated 10 times, ensuring that each subset serves as both training and evaluation data. 
+```{r}
+#setting the random seed for reproducibility
+set.seed(rngseed)
+
+folds <-vfold_cv(mavo2train_data, v=10)
+folds
+```
+
+Subsequently, an object for resampling is constructed using the 'workflow' function from tidymodels. This function combines pre-processing, modeling, and post-processing instructions into a single entity, streamlining the analysis pipeline.
+
+```{r}
+#setting the random seed for reproducibility
+set.seed(rngseed)
+
+#Resampling using workflow for the model with only DOSE as predictor
+mavlinfit_dose2 <- 
+	workflow() %>%
+	add_model(mavo2lin_mod) %>%
+  add_formula(Y ~ DOSE)%>%
+	fit_resamples(folds)
+
+#Resampling using workflow for for the model with all predictors
+mavlinfit_all2 <- 
+	workflow() %>%
+	add_model(mavo2lin_mod) %>%
+  add_formula(Y ~ .)%>%
+	fit_resamples(folds)
+
+#extracting the performance statistics results created from the 10 assessment sets. 
+
+collect_metrics(mavlinfit_dose2)
+collect_metrics(mavlinfit_all2)
+```
+
+The implementation of 10-fold cross-validation resulted in a notable alteration in the RMSE values of the models. Specifically, for the model containing only the DOSE predictor, the RMSE decreased to 690 from the original 702 observed during training data utilization without cross-validation. Conversely, the model incorporating all predictors saw its RMSE increase to 645 with 10-fold cross-validation, compared to the initial value of 627 without it.
+
+In contrast to the train/test model without cross-validation, the 10-fold cross-validation computes 10 distinct RMSE values for each sample and then averages these values. This process introduces variability among the resulting RMSEs. Further analysis indicated that the full model displays a smaller standard error of 64.81 for RMSE, in contrast to the 67.49 observed for the model including only the DOSE predictor.
+
+### CV-repeat
+Lastly, the 10-fold cross-validation modeling is repeated to assess the variation in the metric when employing a different randomization seed.
+
+```{r}
+#setting a different random seed
+set.seed(222)
+
+#Assigning 75% of the data into the training set
+mavodata_split2 <- initial_split(mavo2, prop = .75)
+
+#Creating data frames for the train and test data
+mavotrain_data2 <- training(mavodata_split2)
+mavotest_data2 <- testing(mavodata_split2)
+```
+
+Preparing the data for 10-fold cross-validation.
+```{r}
+#setting a different random seed
+set.seed(222)
+
+#Creating 10 random samples of the newly generated training data
+folds2 <-vfold_cv(mavotrain_data2, v=10)
+folds2
+```
+
+Using the workflow to compute both the models.
+```{r}
+#setting the random seed for reproducibility
+set.seed(222)
+
+#Resampling using workflow for the model with only DOSE as predictor
+mavolinfit_dose3 <- workflow() %>%
+	add_model(mavo2lin_mod) %>%
+  add_formula(Y ~ DOSE)%>%
+	fit_resamples(folds2)
+
+#Resampling using workflowfor for the model with all predictors
+mavolinfit_all3 <- workflow() %>%
+	add_model(mavo2lin_mod) %>%
+  add_formula(Y ~ .)%>%
+	fit_resamples(folds2)
+
+#extracting the performance statistics results created from the 10 assessment sets. 
+
+collect_metrics(mavolinfit_dose3)
+collect_metrics(mavolinfit_all3)
+```
+
