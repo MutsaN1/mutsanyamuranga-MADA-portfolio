@@ -227,7 +227,6 @@ mavoplot6_file <- here("fitting-exercise", "YxDose.png")
 ggsave(filename = mavoplot6_file, plot=mavoplot6, bg="white")
 ```
 
-
 ## Distributions of Variables
 
 These histograms visualize the distributions of variables such as total
@@ -398,12 +397,15 @@ The RMSE is approximately 654.5275. Lower values of RMSE indicate better
 model performance, as they imply smaller errors between predicted and
 actual values. The R-squared value is approximately 0.492, suggesting
 that the model explains about 49.2% of the variance in the outcome
-variable. 
-
+variable.
 
 # Modeling Fitting 2
 
-The data is randomly splitted into 75% train and 25% test sets following the [Data Splitting sectoin of the get Started tidymodels tutorial](https://www.tidymodels.org/start/recipes/#data-split).Linear model is fitted on the training data. In later part of the exercise the model performance will be measured by applying it on the testing data.
+The data is randomly splitted into 75% train and 25% test sets following
+the [Data Splitting sectoin of the get Started tidymodels
+tutorial](https://www.tidymodels.org/start/recipes/#data-split).Linear
+model is fitted on the training data. In later part of the exercise the
+model performance will be measured by applying it on the testing data.
 
 ```{r}
 rngseed <- 1234
@@ -432,7 +434,9 @@ str(mavo2test_data)
 
 ## Linear Model
 
-Two linear models are fitted to the continuous outcome (Y) of the train data. The first uses only the main predictor of interest DOSE, and the second uses all predictors. A null model is also fitted.
+Two linear models are fitted to the continuous outcome (Y) of the train
+data. The first uses only the main predictor of interest DOSE, and the
+second uses all predictors. A null model is also fitted.
 
 ```{r}
 #For reproducibility
@@ -458,10 +462,17 @@ tidy(mavlinfit_all)
 tidy(mavlinfit_null)
 ```
 
-Both the first and second models indicate a positve relationship between Y and DOSE. Furthermore, the second model implies that even when considering the influence of other factors, Y shows a positive correlation with AGE and a negative correlation with both WT and HT. With all other factors held constant, a change in the SEX variable from 1 to 2 is expected to result in a decrease in Y.
+Both the first and second models indicate a positve relationship between
+Y and DOSE. Furthermore, the second model implies that even when
+considering the influence of other factors, Y shows a positive
+correlation with AGE and a negative correlation with both WT and HT.
+With all other factors held constant, a change in the SEX variable from
+1 to 2 is expected to result in a decrease in Y.
 
 ## Root Mean Square Error
-Subsequently, RMSE metrics are calculated for all models using the methods outlined by Dr. Handel for solving module 8 exercises.
+
+Subsequently, RMSE metrics are calculated for all models using the
+methods outlined by Dr. Handel for solving module 8 exercises.
 
 ```{r}
 #| message: false
@@ -491,10 +502,23 @@ print(mavmetrics_dose)
 print(mavmetrics_all)
 ```
 
-The RMSE values stand at 948, 702, and 627 for the null model, the model with only DOSE, and the model with all predictors, respectively. RMSE serves as a gauge for the average disparity between the model's predicted values and the actual data. A lower RMSE signifies a superior fit to the data. Consequently, based on the RMSE metrics, the linear model comprising all predictor variables demonstrates superior performance compared to the other two models.
+The RMSE values stand at 948, 702, and 627 for the null model, the model
+with only DOSE, and the model with all predictors, respectively. RMSE
+serves as a gauge for the average disparity between the model's
+predicted values and the actual data. A lower RMSE signifies a superior
+fit to the data. Consequently, based on the RMSE metrics, the linear
+model comprising all predictor variables demonstrates superior
+performance compared to the other two models.
 
 ## Cross-Validation
-Following that, the model performance is evaluated using the cross-validation technique employing 10 folds for the two main models. This technique involves dividing the training data into 10 subsets and iteratively using 9 of them for model fitting while reserving the remaining 10% for evaluation. This process is repeated 10 times, ensuring that each subset serves as both training and evaluation data. 
+
+Following that, the model performance is evaluated using the
+cross-validation technique employing 10 folds for the two main models.
+This technique involves dividing the training data into 10 subsets and
+iteratively using 9 of them for model fitting while reserving the
+remaining 10% for evaluation. This process is repeated 10 times,
+ensuring that each subset serves as both training and evaluation data.
+
 ```{r}
 #setting the random seed for reproducibility
 set.seed(rngseed)
@@ -503,7 +527,10 @@ folds <-vfold_cv(mavo2train_data, v=10)
 folds
 ```
 
-Subsequently, an object for resampling is constructed using the 'workflow' function from tidymodels. This function combines pre-processing, modeling, and post-processing instructions into a single entity, streamlining the analysis pipeline.
+Subsequently, an object for resampling is constructed using the
+'workflow' function from tidymodels. This function combines
+pre-processing, modeling, and post-processing instructions into a single
+entity, streamlining the analysis pipeline.
 
 ```{r}
 #setting the random seed for reproducibility
@@ -529,12 +556,26 @@ collect_metrics(mavlinfit_dose2)
 collect_metrics(mavlinfit_all2)
 ```
 
-The implementation of 10-fold cross-validation resulted in a notable alteration in the RMSE values of the models. Specifically, for the model containing only the DOSE predictor, the RMSE decreased to 690 from the original 702 observed during training data utilization without cross-validation. Conversely, the model incorporating all predictors saw its RMSE increase to 645 with 10-fold cross-validation, compared to the initial value of 627 without it.
+The implementation of 10-fold cross-validation resulted in a notable
+alteration in the RMSE values of the models. Specifically, for the model
+containing only the DOSE predictor, the RMSE decreased to 690 from the
+original 702 observed during training data utilization without
+cross-validation. Conversely, the model incorporating all predictors saw
+its RMSE increase to 645 with 10-fold cross-validation, compared to the
+initial value of 627 without it.
 
-In contrast to the train/test model without cross-validation, the 10-fold cross-validation computes 10 distinct RMSE values for each sample and then averages these values. This process introduces variability among the resulting RMSEs. Further analysis indicated that the full model displays a smaller standard error of 64.81 for RMSE, in contrast to the 67.49 observed for the model including only the DOSE predictor.
+In contrast to the train/test model without cross-validation, the
+10-fold cross-validation computes 10 distinct RMSE values for each
+sample and then averages these values. This process introduces
+variability among the resulting RMSEs. Further analysis indicated that
+the full model displays a smaller standard error of 64.81 for RMSE, in
+contrast to the 67.49 observed for the model including only the DOSE
+predictor.
 
 ### CV-repeat
-Lastly, the 10-fold cross-validation modeling is repeated to assess the variation in the metric when employing a different randomization seed.
+
+Lastly, the 10-fold cross-validation modeling is repeated to assess the
+variation in the metric when employing a different randomization seed.
 
 ```{r}
 #setting a different random seed
@@ -549,6 +590,7 @@ mavotest_data2 <- testing(mavodata_split2)
 ```
 
 Preparing the data for 10-fold cross-validation.
+
 ```{r}
 #setting a different random seed
 set.seed(222)
@@ -559,6 +601,7 @@ folds2
 ```
 
 Using the workflow to compute both the models.
+
 ```{r}
 #setting the random seed for reproducibility
 set.seed(222)
@@ -581,3 +624,182 @@ collect_metrics(mavolinfit_dose3)
 collect_metrics(mavolinfit_all3)
 ```
 
+<hr>
+
+# This section added by Kelly Cao
+
+The following exercise involves
+
+## Model Prediction
+
+I first create three data frames that combines the observed and predicted values from the 3 original model fits to all of the training data. 
+
+```{r}
+# Creating a data-frame with observed and predicted values from the model with `DOSE` as the predictor
+dose_fit <- mavlinfit_dose %>%
+  predict(mavo2train_data) %>%
+  bind_cols(mavo2train_data)
+
+# Creating a data-frame with observed and predicted values from the model with everything as the predictor
+all_fit <- mavlinfit_all %>%
+  predict(mavo2train_data) %>%
+  bind_cols(mavo2train_data)
+
+# Creating a data-frame with observed and predicted values from the model
+null_fit <- mavlinfit_null %>%
+  predict(mavo2train_data) %>%
+  bind_cols(mavo2train_data)
+
+```
+
+Using ChatGPT, the following few lines were created to add a labeled column to each dataframe. Each data frames now have 90 observations and 8 variables each. After that, I combine all of the data frames with rbind() function. This leads to 270 observations and 8 variables, they are easily differentiable by the newly created label column. 
+```{r}
+# For the dose_fit data frame, I added a label column and dubbed it 'Dose model'
+dose_fit$label <- rep("Dose Model")
+
+# For all_fit data frame, , I added a label column and dubbed it 'All model'
+all_fit$label <- rep("All Model")
+
+# For null_fit data frame, , I added a label column and dubbed it 'Null model'
+null_fit$label <- rep("Null Model")
+
+# I combined the three different data frames, so I can create a graph with it with greater ease. 
+combined_fit <- rbind(dose_fit, all_fit, null_fit)
+
+```
+
+I then use ggplot to create plot to reflect how the model predictions performs visually. The plots differentiate each of the models by the label with color and shape for the data points. The graph plots the observed value vs the predicted value. A good model would have fairly similar predicted values to its observed value. Visually, that would show a more 1:1 or linear relationship. When observing the graph we created in p1 and p2, it becomes obvious that the model with all of the predictors show the greatest predictions. The Dose model and hte Null model both shows flat lines, which is easily explained by the properties of a null model and the distinct factor level characteristics of the `DOSE` predictor. 
+
+```{r}
+# Create the ggplot figure to graph the predictive values vs the observed value for the three models
+p1 <- ggplot(
+  combined_fit, aes(x = Y, y = .pred, color = label, shape = label)) +
+  geom_point(size=2) +
+   scale_color_manual(values = c("#9467bd", "#ff9896", "#17becf"))+
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") +  # Adding a 45-degree line
+  labs(x = "Observed Values", y = "Predicted Values", color = "Model", shape = "Model") +
+  xlim(0, 5000) + 
+  ylim(0, 5000)+
+  theme_bw()
+
+# Viewing the plot
+p1
+```
+
+The `All Model` does most clearly follow the 45 degree angle line compare to the other two models. Despite that, the `All Model` still shows some variation in the data points, which can be explained by other factors. 
+
+```{r}
+# Create the same ggplot figure with facets
+p2 <- ggplot(
+  combined_fit, aes(x = Y, y = .pred, color = label)) +
+  geom_point() +
+  scale_color_manual(values = c("#9467bd", "#ff9896", "#17becf"))+
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") +  # Adding a 45-degree line
+  labs(x = "Observed Values", y = "Predicted Values", color = "Model", shape = "Model") +
+  theme_minimal() +
+  facet_wrap(~ label, scales = "free")+ # Faceting by label (model)
+  xlim(0, 5000) + ylim(0, 5000)
+# Viewing the plot
+p2
+```
+
+I start with creating a column for residuals in the `all_fit` dataframe. I then plot the residuals versus the predicted to observe the patterns. The plot clearly shows a greater number of negative values compared to positive values, showing that there may be other factos still playing a role in affecting the data. 
+```{r}
+all_fit <- all_fit %>%
+  mutate(residuals = .pred - Y)
+
+p3 <- ggplot(all_fit, aes(x = .pred, y = residuals)) +
+  geom_point(size = 2, color = "#ff9896") +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black") +  # Adding a line at y = 0
+  labs(x = "Predicted Values", y = "Residuals") +  # Corrected axis labels
+  ylim(-2500, 2500) +
+  theme_bw()
+
+p3
+
+```
+
+
+## Model Prediction and Uncertainty
+The following would be an attempt at calculating for uncertainty. This will be attempted by using 100 bootstrap samples. The following lines sets up a seed and creates 100 bootstraps into a object called bootstrap_100.
+```{r}
+# Set Seed for reproducibility
+set.seed(rngseed)
+
+# Creating 100 bootstraps using the training data
+bootstrap_100 <- bootstraps(mavo2train_data, times=100)
+```
+
+
+I created a function called `fit_and_predict` that allowed me to loop through each bootstrap and apply a linear model to each of them. A list of prediction is then generated for each of the bootstrap based on the training data. The predictions are then all compiled into a list. I applied that function to my object `bootstrap_100` and set the output of that to `prediction_list`. I then converted that list to a matrix, which allowed me to run the code provided by Dr.Handel on the MADA website. That code calculated the confidence levels and median of the prediction variable.
+```{r}
+fit_and_predict <- function(bootstrap_100) {
+  # Create an empty list to store predictions for all of the boots
+  prediction_list <- list()
+  
+  # Loop through each bootstrap sample
+  for (i in 1:length(bootstrap_100$splits)) {
+    # Placing the current [i] bootstrap sample to 'bootstrap_sample object
+    bootstrap_sample <- analysis(bootstrap_100$splits[[i]])
+    
+    # Fit a linear model
+    linear_model <- lm(Y ~ ., data = bootstrap_sample)
+    
+    # Make predictions on the original train_data
+    boot_prediction <- predict(linear_model, newdata = mavo2train_data)
+    
+    # Store predictions in the empty list created above
+    prediction_list[[i]] <- boot_prediction
+  }
+  
+  return(prediction_list)
+}
+
+
+# Apply fit_and_predict function directly on bootstrap samples. This will cycle the function through each bootstrap sample
+predictions_list <- fit_and_predict(bootstrap_100)
+
+# Verifying it worked. Running this should give me the 90 predicted observation for the first bootstrap sample
+predictions_list[1]
+
+# The following line was provided by Dr. Handel. This can extract a single (the 1st one in this case) bootstrap sample into a data frame called dat_sample
+dat_sample = rsample::analysis(bootstrap_100$splits[[1]])
+
+# I then converted the list to matrix, so the following code can be ran.
+predictions_matrix <- do.call(rbind, predictions_list)
+
+# The following code was based off of Dr. Handel's code
+predictions <- predictions_matrix |> apply(2, quantile,  c(0.055, 0.5, 0.945)) |>  t()
+
+
+```
+
+I then utilized ChatGPT to create the general gist of dataframe and plot below and editted it accordingly. I applied the observed values of the `All_model` to Observed and the predicted value to PointEstimate. The LowerBound, UpperBound, and the Median were all procured from the prediction list created from the function applied to the bootstrap. 
+```{r}
+# Create a data frame containing the observed values and predictions
+plot_data <- data.frame(
+  Observed = all_fit$Y,  # Observed values
+  PointEstimate = all_fit$.pred,  # Point estimate/ Original Prediction
+  Median = predictions[, 2],  # Median
+  LowerBound = predictions[, 1],  # Lower confidence bound
+  UpperBound = predictions[, 3]   # Upper confidence bound
+)
+
+
+
+# Create the plot with the X-axis being the original observed values on the x-axis and the point estimate on the y-axis. The original predictors are color coded in black. The median is in red, and the error bars(based on the UpperBound and LowerBound) or the confidence interval is in blue. 
+p4 <- ggplot(plot_data, aes(x = Observed, y = PointEstimate)) +
+  geom_point(color = "black") +  # Point estimate/ original observed predictions
+  geom_errorbar(aes(ymin = LowerBound, ymax = UpperBound), width = 0.1, color = "blue") +  # Confidence interval
+  geom_point(aes(y = Median), color = "red") +  # Median
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "black") +  # 45 degree line
+  labs(x = "Observed Values", y = "Predicted Values", title = "Observed vs. Predicted Values for Model 2") +
+  xlim(0, 6000) + ylim(0, 6000)+
+  theme_bw()  # Theme
+
+# Print the plot
+print(p4)
+
+`````````
+
+When observing the graph, there are a lot of overlaps between the prediction medians (sourced from the bootstrap samples) and the observed values (provided from the original fit). Despite it's generally good fit, there are still a few signs of scattering, which might indicate other factors might still be influencing the data.  Both the newly provided predicted medians and original follows the 45 degree angle line quite well. This shows that both that the predicted values and observed values from the original fit and the bootstrap fits are both fairly similar, which indicates a sign of a good model. 
