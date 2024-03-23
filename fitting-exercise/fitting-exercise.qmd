@@ -4,7 +4,7 @@ editor:
   markdown: 
     wrap: 72
 editor_options: 
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
 
 # Introduction
@@ -770,8 +770,6 @@ predictions_matrix <- do.call(rbind, predictions_list)
 
 # The following code was based off of Dr. Handel's code
 predictions <- predictions_matrix |> apply(2, quantile,  c(0.055, 0.5, 0.945)) |>  t()
-
-
 ```
 
 I then utilized ChatGPT to create the general gist of dataframe and plot below and editted it accordingly. I applied the observed values of the `All_model` to Observed and the predicted value to PointEstimate. The LowerBound, UpperBound, and the Median were all procured from the prediction list created from the function applied to the bootstrap. 
@@ -784,8 +782,6 @@ plot_data <- data.frame(
   LowerBound = predictions[, 1],  # Lower confidence bound
   UpperBound = predictions[, 3]   # Upper confidence bound
 )
-
-
 
 # Create the plot with the X-axis being the original observed values on the x-axis and the point estimate on the y-axis. The original predictors are color coded in black. The median is in red, and the error bars(based on the UpperBound and LowerBound) or the confidence interval is in blue. 
 p4 <- ggplot(plot_data, aes(x = Observed, y = PointEstimate)) +
@@ -800,6 +796,60 @@ p4 <- ggplot(plot_data, aes(x = Observed, y = PointEstimate)) +
 # Print the plot
 print(p4)
 
-`````````
+```
 
 When observing the graph, there are a lot of overlaps between the prediction medians (sourced from the bootstrap samples) and the observed values (provided from the original fit). Despite it's generally good fit, there are still a few signs of scattering, which might indicate other factors might still be influencing the data.  Both the newly provided predicted medians and original follows the 45 degree angle line quite well. This shows that both that the predicted values and observed values from the original fit and the bootstrap fits are both fairly similar, which indicates a sign of a good model. 
+
+# Part 3
+
+```{r}
+library(ggplot2)
+
+# Make predictions on the test data using the fitted model from training data
+test_predictions <- predict(mavlinfit_all, new_data = mavo2test_data)
+```
+
+```{r}
+# Create data frames for observed and predicted values for both training and test data
+train_plot_data <- data.frame(Observed = mavo2train_data$Y,
+                               Predicted = predict(mavlinfit_all, new_data = mavo2train_data),
+                               Dataset = "Training")
+```
+
+```{r}
+test_plot_data <- data.frame(Observed = mavo2test_data$Y,
+                              Predicted = test_predictions,
+                              Dataset = "Test")
+```
+
+
+```{r}
+combo_plot1 <- ggplot() +
+          geom_point(data = train_plot_data, aes(x = Observed, y = .pred, color = Dataset), alpha = 1) +
+          geom_point(data = test_plot_data, aes(x = Observed, y = .pred, color = Dataset), alpha = 1, shape = 21, fill = "red") +
+          geom_abline(intercept = 0, slope = 1, linetype = "dashed") +  # 45 degree line
+          labs(x = "Observed Values", y = "Predicted Values", title = "Predicted vs Observed Values") +
+          scale_color_manual(values = c("Training" = "blue", "Test" = "red"), guide = "none") +  # Custom colors and remove legend
+          scale_shape_manual(values = c("Test" = 1)) +  # Set shape for test data
+          theme_minimal()
+
+combo_plot1
+```
+```{r}
+mavocomboplot_file <- here("fitting-exercise", "part3plot.png")
+ggsave(filename = mavocomboplot_file, plot=combo_plot1, bg="white")
+```
+# Discussion
+
+The analysis of the models reveals important insights into their performance compared to the null model and their usability for real-world applications. 
+
+The RMSE values stand at 948, 702, and 627 for the null model, the model with only DOSE, and the model with all predictors, respectively. These values provide a quantitative measure of predictive accuracy, with lower RMSE values indicating better model performance. 
+
+When considering whether any model performs better than the null model, it's evident that both Model 1 (Dose Model) and Model 2 (All Model) show improvements over the null model, as indicated by their lower RMSE values. Model 1, which includes only the DOSE predictor, demonstrates improvement over the null model by capturing some variability in the data. However, its simplicity is reflected in the plot as a flat line, suggesting that it might oversimplify the relationship between the predictor and response. 
+
+Despite its lower RMSE compared to the null model, the scattered pattern in Model 2's plot indicates residual variability, which might be attributed to unaccounted factors influencing the response variable. The implementation of 10-fold cross-validation resulted in notable alterations in the RMSE values of the models. Specifically, for Model 1, the RMSE decreased to 690 from the original 702 observed during training data utilization without cross-validation. Conversely, Model 2 saw its RMSE increase to 645 with 10-fold cross-validation, compared to the initial value of 627 without it. This variability among the resulting RMSEs is further highlighted by the standard error of 64.81 for RMSE in the full model, in contrast to the 67.49 observed for Model 1. 
+
+When observing the graph for Model 2, despite the overlap between prediction medians sourced from bootstrap samples and observed values, indicating a generally good fit, there are signs of scattering, suggesting other influencing factors. However, both the predicted medians and observed values from the original fit and the bootstrap fits closely follow the 45-degree angle line, indicating similarity and suggesting a sign of a good model fit. 
+
+Therefore, while Model 2 shows improvement over simpler models and might be considered usable for exploratory analysis or as a baseline model, its limitations underscore the need for ongoing refinement and consideration of additional factors to develop a more robust predictive model for real-world scenarios.
+
