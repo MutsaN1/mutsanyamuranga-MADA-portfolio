@@ -1,0 +1,536 @@
+---
+title: "Machine Learning 1"
+editor: 
+  markdown: 
+    wrap: 72
+editor_options: 
+  chunk_output_type: inline
+---
+
+
+# Introduction
+
+This analysis builds upon the fitting exercises conducted in Week 8 and
+Week 10. It utilizes the cleaned data, including the variable ‘RACE’
+from the Week 8 exercise.
+
+# Setup
+
+First, required packages are installed and loaded.
+
+
+```{r}
+#Load necessary packages
+library(tidymodels)
+library(ggplot2)
+library(dplyr)
+library(readr) #for loading Excel files
+library(dplyr) #for data processing/cleaning
+library(tidyr) #for data processing/cleaning
+library(skimr) #for nice visualization of data 
+library(here) #to set paths
+library(gtsummary)# for summary tables
+library(patchwork) #for combine plots
+library(ranger) #for Random Forest model
+library(glmnet) #for Lasso model
+library(rpart.plot)  # for visualizing a decision tree
+library(vip)         # for variable importance plots
+library(parsnip)
+library(yardstick)
+```
+
+```{r}
+#Setting random seed
+set.seed(1234)
+#Load in data
+cleaned_mavo <- readRDS("mavoglurant.rds")
+```
+
+
+# Processing
+
+I will begin by processing the data. In looking through the data we must
+assess what data encodes for RACE.
+
+
+```{r}
+#Check data
+skimr::skim(cleaned_mavo)
+str(cleaned_mavo)
+summary(cleaned_mavo)
+```
+
+
+The coding for RACE is a bit confusing so we will feature engineer "7"
+and "88" into a new category "3".
+
+
+```{r}
+# Convert the factor variable to character
+cleaned_mavo$RACE <- as.character(cleaned_mavo$RACE)
+
+# Replace values 7 and 88 with 3
+cleaned_mavo$RACE[cleaned_mavo$RACE == "7" | cleaned_mavo$RACE == "88"] <- "3"
+
+# Convert the variable back to a factor
+cleaned_mavo$RACE <- factor(cleaned_mavo$RACE)
+
+#Check RACE variable
+table(cleaned_mavo$RACE)
+```
+
+
+Next, I will create a correlation plot of the continuous variables(those
+coded as numerical objects within the data set). The correlation matrix
+quantifies the strength and direction of the linear relationships
+between these variables. It helps identify potential multi-collinearity
+issues and informs feature selection for modeling purposes.
+
+
+```{r}
+# Select only the continuous variables from the dataset
+continuous_vars <- cleaned_mavo[, sapply(cleaned_mavo, is.numeric)]
+
+# Calculate the correlation matrix
+correlation_matrix <- cor(continuous_vars)
+
+# Plot the correlation matrix as a heatmap
+library(ggplot2)
+library(reshape2)
+
+# Melt the correlation matrix for plotting
+melted_correlation <- melt(correlation_matrix)
+
+# Plot the heatmap
+mavo_corplot <- ggplot(data = melted_correlation, aes(Var1, Var2, fill = value)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", midpoint = 0, limit = c(-1, 1), space = "Lab", name="Correlation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 10, hjust = 1)) +
+  coord_fixed()
+
+# Print the correlation matrix
+print(correlation_matrix)
+
+#Saving the figure in the folder
+corplot_file <- here("ml-models-exercise", "correlation_plot.png")
+ggsave(filename = corplot_file, plot=mavo_corplot, bg="white")
+```
+
+
+We see that that Y and DOSE as well as HT and WT have relatively strong
+correlations but neither are greater that .9 so we can leave these
+variable in.
+
+We will now feature engineer the Ht and WT variables into a new variable
+called BMI. BMI is measured as BMI= \[weight(kg) / height(m)\^2\]. First
+we must check to see what units would be reasonable to assume for the
+data. Then we will combine the categories using these units.
+
+
+```{r}
+#Check WT and HT categories
+table(cleaned_mavo$WT)
+table(cleaned_mavo$HT)
+
+# Calculate BMI using HT in meters and WT in kilograms
+cleaned_mavo$BMI <- cleaned_mavo$WT / (cleaned_mavo$HT)^2
+
+table(cleaned_mavo$BMI)
+
+# Filter out HT and WT from the cleaned_mavo dataset
+cleaned_mavo1 <- cleaned_mavo %>%
+  select(-HT, -WT)
+```
+
+
+# Modeling
+
+The next step is the analysis phase, which involves fitting three models
+with all predictors.
+
+Linear Model ; LASSO Regression ; Random Forest (RF)
+
+
+```{r}
+# Set Engine
+## Linear Engine
+lm_mavo1model <- 
+  linear_reg() %>% 
+  set_engine("lm")
+
+## Lasso Engine
+lasso_mavo1model <- 
+  linear_reg(penalty = 0.1, mixture = 0.95) %>% 
+  set_engine("glmnet")
+
+## Random Forest Engine
+rf_mavo1model <- rand_forest() %>% 
+                  set_mode("regression") %>% 
+                  set_engine("ranger", seed = 123)
+```
+
+
+Here, I define workflows for each model.
+
+
+```{r}
+# Define the linear model workflow
+lm_mavo1wflow <- 
+  workflow() %>% 
+  add_model(lm_mavo1model)
+
+# Define the LASSO regression workflow
+lasso_mavo1wflow <- 
+  workflow() %>% 
+  add_model(lasso_mavo1model)
+
+# Define the random forest workflow with specified random seed
+rf_mavo1wflow <- workflow() %>%
+  add_model(rf_mavo1model) 
+```
+
+
+The models are then fitted using the workflows and a recipe.
+
+
+```{r}
+library(ranger)
+
+# Define the recipe
+mavo1_recipe <- recipe(Y ~ ., data = cleaned_mavo) %>%
+  step_dummy(all_nominal(), one_hot = TRUE) %>%
+  step_normalize(all_predictors())
+
+# Fit the models
+mavo1lin_fit <- lm_mavo1wflow %>%
+  add_recipe(mavo1_recipe) %>%
+  fit(cleaned_mavo)
+
+mavo1lasso_fit <- lasso_mavo1wflow %>%
+  add_recipe(mavo1_recipe) %>%
+  fit(cleaned_mavo)
+
+mavo1rf_fit <- rf_mavo1wflow %>%
+  add_recipe(mavo1_recipe) %>%
+  fit(cleaned_mavo)
+```
+
+
+Next step is model prediction and model performance evaluation.
+
+
+```{r}
+#| message: false
+#| warning: false
+# Make predictions on the entire dataset for each model
+mavo1lin_pred <- predict(mavo1lin_fit, cleaned_mavo) %>%
+  bind_cols(cleaned_mavo)
+
+mavo1lasso_pred <- predict(mavo1lasso_fit, cleaned_mavo) %>%
+  bind_cols(cleaned_mavo)
+
+mavo1rf_pred <- predict(mavo1rf_fit, cleaned_mavo) %>%
+  bind_cols(cleaned_mavo)
+```
+
+
+Subsequent step is calculation of RMSE for all the models.
+
+
+```{r}
+#| message: false
+#| warning: false
+
+#Computing the RMSE for Linear model
+mavo1metrics_lm <- mavo1lin_fit %>%
+  predict(cleaned_mavo) %>%
+  bind_cols(cleaned_mavo)%>%
+  metrics(truth=Y, estimate=.pred)
+
+#Computing the RMSE for Lasso model
+mavo1metrics_lasso <- mavo1lasso_fit %>%
+  predict(cleaned_mavo) %>%
+  bind_cols(cleaned_mavo)%>%
+  metrics(truth=Y, estimate=.pred)
+
+#Computing the RMSE for Random Forest model
+mavo1metrics_rf <- mavo1rf_fit %>%
+  predict(cleaned_mavo) %>%
+  bind_cols(cleaned_mavo)%>%
+  metrics(truth=Y, estimate=.pred)
+
+#print the results
+print(mavo1metrics_lm)
+print(mavo1metrics_lasso)
+print(mavo1metrics_rf)
+```
+
+
+Finally, we create plots to visualize the Observed vs Predictions.
+
+
+```{r}
+# Plot Preperation
+## Create a data frame containing observed and predicted values
+lin_pred <- bind_cols(cleaned_mavo1, .pred = mavo1lin_pred$.pred)
+lasso_pred <- bind_cols(cleaned_mavo1, .pred = mavo1lasso_pred$.pred)
+rf_pred <- bind_cols(cleaned_mavo1, .pred = mavo1rf_pred$.pred)
+
+## Creating Labels for Plots
+lin_pred$label <- rep("Linear Model")
+lasso_pred$label <- rep("Lasso Model")
+rf_pred$label <- rep("Random Forest Model")
+
+# Create the ggplot figure to graph the predictive values vs the observed value for the three models
+p1 <- ggplot(
+  lin_pred, aes(x = Y, y = .pred, color = label, shape = label)) +
+  geom_point(size=2) +
+   scale_color_manual(values = c("#ff9896"))+
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") +  # Adding a 45-degree line
+  labs(x = "Observed Values", y = "Predicted Values", color = "Model", shape = "Model") +
+  xlim(0, 5000) + 
+  ylim(0, 5000)+
+  theme_bw()
+
+# Viewing the plot
+p1
+
+p2 <- ggplot(
+  lasso_pred, aes(x = Y, y = .pred, color = label, shape = label)) +
+  geom_point(size=2) +
+   scale_color_manual(values = c("#9467bd"))+
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") +  # Adding a 45-degree line
+  labs(x = "Observed Values", y = "Predicted Values", color = "Model", shape = "Model") +
+  xlim(0, 5000) + 
+  ylim(0, 5000)+
+  theme_bw()
+
+# Viewing the plot
+p2
+
+p3 <- ggplot(
+  rf_pred, aes(x = Y, y = .pred, color = label, shape = label)) +
+  geom_point(size=2) +
+   scale_color_manual(values = c("#17becf"))+
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") +  # Adding a 45-degree line
+  labs(x = "Observed Values", y = "Predicted Values", color = "Model", shape = "Model") +
+  xlim(0, 5000) + 
+  ylim(0, 5000)+
+  theme_bw()
+
+# Viewing the plot
+p3
+```
+
+
+The Random Forest model outperformed the other two models in terms of
+RMSE metrics. Both the Linear model and LASSO yielded similar RMSE
+values. Examination of the correlation plot revealed that the predictors
+do not exhibit high collinearity. Given that the penalty for the LASSO
+model was set at only 0.1, this might not have been sufficient to
+significantly alter the estimates in comparison to those obtained from
+the Linear model.
+
+For a visual impression of the the predicted values from all the models
+I plotted the observed values against all the predicted values. The
+plots revealed that the predicted values from the Random Forest model
+are closer to the line of perfect fit than the ones from linear and
+LASSO models.
+
+# Model Tuning
+
+Subsequently, I developed code to fine-tune the LASSO and Random Forest
+models without employing cross-validation for resampling. To achieve
+this, I configured the LASSO model to be adjustable and incorporated it
+into the recipe and workflow.
+
+## Lasso
+
+First, we will start by tuning the Lasso model. I defined the range of
+penalty parameters to tune over. The range is from 1E-5 to 1E2. I picked
+50 values linearly spaced on a log scale for tuning. To tune the grid
+using the workflow object, first it requires resampling with the entire
+data. Then the LASSO model will be tuned with the grid and the resamples
+prepared.
+
+
+```{r}
+# Define the LASSO tuning grid
+lasso_grid <- expand.grid(penalty = 10^seq(-5, 2, length.out = 50))
+
+resamples_data <- apparent(cleaned_mavo)
+
+#Setting up the model so that the tuning function (tune())can work
+LASSO_tunable <- linear_reg(penalty = tune(), mixture = 1)%>%
+  set_engine("glmnet")%>%
+  set_mode("regression")
+
+
+#Define Lasso Model
+lasso_mavo2model <- linear_reg(penalty = tune()) %>%
+  set_engine("glmnet")
+
+#workflow for tunable LASSO model
+mavo2_lassowf<- workflow()%>%
+  add_model(lasso_mavo2model)%>%
+  add_recipe(mavo1_recipe) 
+  
+# Tune Lasso model
+lasso_res <- tune_grid(
+    workflow() %>%
+    add_recipe(mavo1_recipe) %>%
+    add_model(lasso_mavo2model),
+    resamples = resamples_data,
+    grid = lasso_grid,
+    metrics = metric_set(rmse),
+    control = control_grid(save_pred = TRUE)
+  )
+```
+
+
+Visualizing the diagnostics from the LASSO tuning results to evaluate
+model performance.
+
+
+```{r}
+p4 <- autoplot(lasso_res)
+
+p4
+```
+
+
+The diagnostic plot for the LASSO model indicates that it performs well
+when the penalty values are low. This is evident from the corresponding
+Root Mean Square Error (RMSE) metrics. However, as the penalty value
+increases, especially beyond a certain threshold, the model becomes more
+regularized. Consequently, some coefficients shrink to zero, introducing
+bias and leading to an increase in RMSE.
+
+Interestingly, in the initial stages of analysis, the LASSO model
+behaves similarly to a linear model when the penalty values are very
+low. Consequently, the RMSE values are comparable. This behavior occurs
+because at lower RMSE values, the model is less constrained by
+regularization.
+
+## Random Forest 
+
+Next, I will tune the Random Forest model.
+
+First, I updated the model and workflow, setting the mumber of trees at
+300. The tunning will focus on the parameters mtry and min_n, while all
+other parameters will remain at their default settings.
+
+
+```{r}
+rf_wf2 <- rand_forest(mode = "regression", 
+          mtry = tune(), 
+          min_n = tune(), 
+          trees = 300) %>%
+      set_engine("ranger")
+
+mavo2wf <- workflow() %>%
+    add_recipe(mavo1_recipe) %>%
+    add_model(rf_wf2)
+```
+
+
+I explored 7 x 7 parameter combinations by setting a tuning grid with
+the grid_regular() function, and setting the range for mtry from 1 to 7,
+and min_n from 1 to 21, with each parameter having levels.
+
+
+```{r}
+# Define by 7X7 grid
+rf_grid <- grid_regular(mtry(range = c(1,7)),
+                        min_n(range = c(1,21)),
+                        levels = 7)
+# Tune model
+rf_res <- mavo2wf %>%
+          tune_grid(resamples = resamples_data,
+                    grid = rf_grid,
+                    metrics = metric_set(rmse))
+```
+
+
+Visualizing the diagnostics Random Forest tuning results.
+
+
+```{r}
+p5 <- autoplot(rf_res)
+
+p5
+```
+
+
+The diagnostic plot illustrates RMSE values across various tuning
+parameters, revealing that optimal results are achieved with higher
+number of randomly selected predictrs (mtry) values and lower minimal
+node size (min_n) values.
+
+## Tune with CV
+
+Next, I will be tuning of both the LASSO and Random Forest (RF) models,
+using resampling with 5-fold cross-validation with 5 repititions. First,
+I set up the resample object, after which using the resamples to tune
+both models.
+
+
+```{r}
+#For reproducibility
+set.seed(4567)
+
+#Create resample object with cross-validation
+resamples_cv<-vfold_cv(cleaned_mavo, v=5, repeats = 5)
+
+#Tunning the LASSO model
+lasso_cv <- mavo2_lassowf %>%
+  tune_grid(resamples = resamples_cv, grid = lasso_grid)
+
+#Tunning the RF model
+rf_cv <- mavo2wf %>%
+  tune_grid(resamples = resamples_cv, grid = rf_grid)
+```
+
+
+Plotting the tuning results of LASSO and Random Forest models.
+
+
+```{r}
+# Analyze LASSO tuning results
+p6 <-autoplot(lasso_cv)
+
+# Analyze RF tuning results
+p7 <-autoplot(rf_cv)
+
+p4+p5+p6+p7
+```
+
+
+# Conclusion
+
+The top two plots represent the diagnostic results for the LASSO and
+Random Forest (RF) models before applying cross-validation (CV), while
+the bottom two plots show the same diagnostics after CV. In both cases,
+the use of CV has resulted in higher Root Mean Square Error (RMSE)
+values. This is because CV is specifically designed to provide a more
+robust estimate of a model’s performance by mitigating over-fitting.
+
+Upon comparing the pre- and post-CV diagnostics, we observe that the
+LASSO model consistently exhibits lower RMSE values, indicating better
+predictive performance—especially when smaller penalties are applied.
+The LASSO model achieves this by applying less shrinkage to the
+coefficients, allowing for greater model complexity and potentially
+leading to improved RMSE.
+
+Conversely, the RF model shows higher RMSE values after CV. One
+contributing factor could be the smaller data size. RF constructs each
+tree using different subsets of data points and features, introducing
+variability in performance across different CV folds, especially when
+dealing with limited data.
+
+The RF model excels when the relationship between features and outcomes
+is nonlinear and complex. However, if the true underlying model is
+linear or nearly linear, simpler models like LASSO tend to perform
+better.
+

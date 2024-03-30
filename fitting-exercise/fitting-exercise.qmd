@@ -114,9 +114,9 @@ dim(combined_mavo)
 ```{r}
 # Select only the specified variables and check the structure
 cleaned_mavo <- combined_mavo %>%
-  select(Y, DOSE, AGE, SEX, WT, HT) %>%
+  select(Y, DOSE, AGE, SEX, RACE, WT, HT) %>%
   #converting SEX as factors
-  mutate(across(c(SEX), as.factor))
+  mutate(across(c(SEX,RACE), as.factor))
 
 readr::write_rds(cleaned_mavo, "mavoglurant.rds")
 
