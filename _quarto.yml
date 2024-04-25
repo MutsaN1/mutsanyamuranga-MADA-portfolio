@@ -35,5 +35,5 @@ format:
   html:
     theme: solar
     highlight: zenburn
-    css: styles.css
+    css: mvp.css
     toc: false
