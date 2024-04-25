@@ -1,8 +1,8 @@
 ---
-title: "Hey There!"
+title: "Welcome All"
 ---
 
-Welcome to **my website** and *data analysis portfolio.*
+This is **my website** and *Data Analysis Portfolio.*
 
 -   Please use the `Menu Bar` above to look around.
 -   Have fun!
