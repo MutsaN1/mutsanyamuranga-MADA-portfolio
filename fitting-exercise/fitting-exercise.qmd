@@ -116,7 +116,7 @@ dim(combined_mavo)
 cleaned_mavo <- combined_mavo %>%
   select(Y, DOSE, AGE, SEX, RACE, WT, HT) %>%
   #converting SEX as factors
-  mutate(across(c(SEX,RACE), as.factor))
+  mutate(across(c(SEX, RACE), as.factor))
 
 readr::write_rds(cleaned_mavo, "mavoglurant.rds")
 

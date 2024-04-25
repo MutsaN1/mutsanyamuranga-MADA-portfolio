@@ -93,28 +93,28 @@
   {
     "objectID": "ml-models-exercise/ml-models-exercise.html",
     "href": "ml-models-exercise/ml-models-exercise.html",
-    "title": "Machine Learning",
+    "title": "Machine Learning Exercise",
     "section": "",
     "text": "This analysis builds upon the fitting exercises conducted in Week 8 and Week 10. It utilizes the cleaned data, including the variable ‘RACE’ from the Week 8 exercise."
   },
   {
     "objectID": "ml-models-exercise/ml-models-exercise.html#lasso",
     "href": "ml-models-exercise/ml-models-exercise.html#lasso",
-    "title": "Machine Learning",
+    "title": "Machine Learning Exercise",
     "section": "Lasso",
     "text": "Lasso\nFirst, we will start by tuning the Lasso model. I defined the range of penalty parameters to tune over. The range is from 1E-5 to 1E2. I picked 50 values linearly spaced on a log scale for tuning. To tune the grid using the workflow object, first it requires resampling with the entire data. Then the LASSO model will be tuned with the grid and the resamples prepared.\n\n# Define the LASSO tuning grid\nlasso_grid &lt;- expand.grid(penalty = 10^seq(-5, 2, length.out = 50))\n\nresamples_data &lt;- apparent(cleaned_mavo)\n\n#Setting up the model so that the tuning function (tune())can work\nLASSO_tunable &lt;- linear_reg(penalty = tune(), mixture = 1)%&gt;%\n  set_engine(\"glmnet\")%&gt;%\n  set_mode(\"regression\")\n\n\n#Define Lasso Model\nlasso_mavo2model &lt;- linear_reg(penalty = tune()) %&gt;%\n  set_engine(\"glmnet\")\n\n#workflow for tunable LASSO model\nmavo2_lassowf&lt;- workflow()%&gt;%\n  add_model(lasso_mavo2model)%&gt;%\n  add_recipe(mavo1_recipe) \n  \n# Tune Lasso model\nlasso_res &lt;- tune_grid(\n    workflow() %&gt;%\n    add_recipe(mavo1_recipe) %&gt;%\n    add_model(lasso_mavo2model),\n    resamples = resamples_data,\n    grid = lasso_grid,\n    metrics = metric_set(rmse),\n    control = control_grid(save_pred = TRUE)\n  )\n\nVisualizing the diagnostics from the LASSO tuning results to evaluate model performance.\n\np4 &lt;- autoplot(lasso_res)\n\np4\n\n\n\n\nThe diagnostic plot for the LASSO model indicates that it performs well when the penalty values are low. This is evident from the corresponding Root Mean Square Error (RMSE) metrics. However, as the penalty value increases, especially beyond a certain threshold, the model becomes more regularized. Consequently, some coefficients shrink to zero, introducing bias and leading to an increase in RMSE.\nInterestingly, in the initial stages of analysis, the LASSO model behaves similarly to a linear model when the penalty values are very low. Consequently, the RMSE values are comparable. This behavior occurs because at lower RMSE values, the model is less constrained by regularization."
   },
   {
     "objectID": "ml-models-exercise/ml-models-exercise.html#random-forest",
     "href": "ml-models-exercise/ml-models-exercise.html#random-forest",
-    "title": "Machine Learning",
+    "title": "Machine Learning Exercise",
     "section": "Random Forest",
     "text": "Random Forest\nNext, I will tune the Random Forest model.\nFirst, I updated the model and workflow, setting the mumber of trees at 300. The tunning will focus on the parameters mtry and min_n, while all other parameters will remain at their default settings.\n\nrf_wf2 &lt;- rand_forest(mode = \"regression\", \n          mtry = tune(), \n          min_n = tune(), \n          trees = 300) %&gt;%\n      set_engine(\"ranger\")\n\nmavo2wf &lt;- workflow() %&gt;%\n    add_recipe(mavo1_recipe) %&gt;%\n    add_model(rf_wf2)\n\nI explored 7 x 7 parameter combinations by setting a tuning grid with the grid_regular() function, and setting the range for mtry from 1 to 7, and min_n from 1 to 21, with each parameter having levels.\n\n# Define by 7X7 grid\nrf_grid &lt;- grid_regular(mtry(range = c(1,7)),\n                        min_n(range = c(1,21)),\n                        levels = 7)\n# Tune model\nrf_res &lt;- mavo2wf %&gt;%\n          tune_grid(resamples = resamples_data,\n                    grid = rf_grid,\n                    metrics = metric_set(rmse))\n\nVisualizing the diagnostics Random Forest tuning results.\n\np5 &lt;- autoplot(rf_res)\n\np5\n\n\n\n\nThe diagnostic plot illustrates RMSE values across various tuning parameters, revealing that optimal results are achieved with higher number of randomly selected predictrs (mtry) values and lower minimal node size (min_n) values."
   },
   {
     "objectID": "ml-models-exercise/ml-models-exercise.html#tune-with-cv",
     "href": "ml-models-exercise/ml-models-exercise.html#tune-with-cv",
-    "title": "Machine Learning",
+    "title": "Machine Learning Exercise",
     "section": "Tune with CV",
     "text": "Tune with CV\nNext, I will be tuning of both the LASSO and Random Forest (RF) models, using resampling with 5-fold cross-validation with 5 repititions. First, I set up the resample object, after which using the resamples to tune both models.\n\n#For reproducibility\nset.seed(4567)\n\n#Create resample object with cross-validation\nresamples_cv&lt;-vfold_cv(cleaned_mavo, v=5, repeats = 5)\n\n#Tunning the LASSO model\nlasso_cv &lt;- mavo2_lassowf %&gt;%\n  tune_grid(resamples = resamples_cv, grid = lasso_grid)\n\n#Tunning the RF model\nrf_cv &lt;- mavo2wf %&gt;%\n  tune_grid(resamples = resamples_cv, grid = rf_grid)\n\nPlotting the tuning results of LASSO and Random Forest models.\n\n# Analyze LASSO tuning results\np6 &lt;-autoplot(lasso_cv)\n\n# Analyze RF tuning results\np7 &lt;-autoplot(rf_cv)\n\np4+p5+p6+p7"
   },

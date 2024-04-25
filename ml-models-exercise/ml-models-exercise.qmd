@@ -1,5 +1,5 @@
 ---
-title: "Machine Learning"
+title: "Machine Learning Exercise"
 editor: 
   markdown: 
     wrap: 72
@@ -46,8 +46,7 @@ cleaned_mavo <- readRDS("mavoglurant.rds")
 
 # Processing
 
-I will begin by processing the data. In looking through the data we must
-assess what data encodes for RACE.
+I will begin by processing the data. In looking through the data we must assess what data encodes for RACE.
 
 ```{r}
 #Check data
@@ -472,27 +471,11 @@ p4+p5+p6+p7
 
 # Conclusion
 
-The top two plots represent the diagnostic results for the LASSO and
-Random Forest (RF) models before applying cross-validation (CV), while
-the bottom two plots show the same diagnostics after CV. In both cases,
-the use of CV has resulted in higher Root Mean Square Error (RMSE)
-values. This is because CV is specifically designed to provide a more
-robust estimate of a model’s performance by mitigating over-fitting.
+The top two plots represent the diagnostic results for the LASSO and Random Forest (RF) models before applying cross-validation (CV), while the bottom two plots show the same diagnostics after CV. In both cases, the use of CV has resulted in higher Root Mean Square Error (RMSE) values. This is because CV is specifically designed to provide a more robust estimate of a model’s performance by mitigating over-fitting.
 
-Upon comparing the pre- and post-CV diagnostics, we observe that the
-LASSO model consistently exhibits lower RMSE values, indicating better
-predictive performance—especially when smaller penalties are applied.
-The LASSO model achieves this by applying less shrinkage to the
-coefficients, allowing for greater model complexity and potentially
-leading to improved RMSE.
+Upon comparing the pre- and post-CV diagnostics, we observe that the LASSO model consistently exhibits lower RMSE values, indicating better predictive performance—especially when smaller penalties are applied. The LASSO model achieves this by applying less shrinkage to the coefficients, allowing for greater model complexity and potentially leading to improved RMSE.
 
 Conversely, the RF model shows higher RMSE values after CV. One
-contributing factor could be the smaller data size. RF constructs each
-tree using different subsets of data points and features, introducing
-variability in performance across different CV folds, especially when
-dealing with limited data.
+contributing factor could be the smaller data size. RF constructs each tree using different subsets of data points and features, introducing variability in performance across different CV folds, especially when dealing with limited data.
 
-The RF model excels when the relationship between features and outcomes
-is nonlinear and complex. However, if the true underlying model is
-linear or nearly linear, simpler models like LASSO tend to perform
-better.
+The RF model excels when the relationship between features and outcomes is nonlinear and complex. However, if the true underlying model is linear or nearly linear, simpler models like LASSO tend to perform better.
